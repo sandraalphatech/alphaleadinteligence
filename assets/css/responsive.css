@@ -1,0 +1,27 @@
+/* Adaptação a ecrãs mais pequenos (tablet e telemóvel) */
+
+@media (max-width: 1100px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 860px) {
+    /* o menu lateral esconde-se e abre com o botão ☰ */
+    .sidebar { transform: translateX(-100%); transition: transform .28s ease; box-shadow: none; }
+    .sidebar.aberto { transform: none; box-shadow: 0 0 0 100vmax rgba(10, 8, 30, .55); }
+    .main { margin-left: 0; }
+    .burger { display: grid; place-items: center; }
+    .topbar { padding: 20px 18px 6px; }
+    .content { padding: 14px 18px 40px; }
+
+    .login { padding: 16px; }
+    .login-card { grid-template-columns: 1fr; min-height: 0; }
+    .login-art { display: none; }
+}
+
+@media (max-width: 520px) {
+    .stats { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .stat { padding: 16px; }
+    .stat b { font-size: 1.7rem; }
+    .topbar h1 { font-size: 1.4rem; }
+}

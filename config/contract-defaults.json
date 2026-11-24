@@ -1,0 +1,14 @@
+{
+    "_nota": "Dados do Prestador que entram em todos os contratos. Preencha o NIF (NIPC) e a morada completa uma vez aqui; no formulário do contrato podem ser alterados caso a caso.",
+    "prestador": {
+        "nome": "Alpha Tech Solutions",
+        "nif": "CPF 36048307888",
+        "morada": "São Paulo - SP, Brasil",
+        "representante": "Sandra Silva",
+        "cargo": "Fundadora",
+        "email": "sandra.alphatech@gmail.com"
+    },
+    "iban": "",
+    "foro": "São Paulo",
+    "local": "São Paulo"
+}

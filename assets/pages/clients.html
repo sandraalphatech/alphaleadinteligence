@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Clients · Alpha Leads Intelligence</title>
+    <link rel="icon" href="/assets/images/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/responsive.css">
+    <link rel="stylesheet" href="/assets/css/contract.css">
+</head>
+<body data-page="clientes" data-title="title_clientes">
+    <div class="app">
+        <aside class="sidebar" id="sidebar"></aside>
+        <div class="main">
+            <header class="topbar">
+                <div><h1 data-i18n="nav_clientes">Clients</h1><p data-i18n="clientes_sub"></p></div>
+                <div class="topbar-right">
+                    <div class="lang" role="group" data-i18n-aria="aria_lang" aria-label="Language">
+                        <button type="button" data-lang="pt">PT</button>
+                    </div>
+                    <button class="burger" id="burger" data-i18n-aria="aria_menu" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+                </div>
+            </header>
+            <main class="content">
+                <div id="cl-aviso" aria-live="polite"></div>
+                <section id="cl-lista">
+                    <div class="ng-barra card" id="cl-barra"></div>
+                    <div id="cl-corpo"><p class="nota" data-i18n="loading">Loading…</p></div>
+                </section>
+                <section id="cl-ficha" hidden></section>
+                <section id="cl-editor" hidden></section>
+            </main>
+        </div>
+    </div>
+    <script src="/assets/js/i18n.js"></script>
+    <script src="/assets/js/app.js"></script>
+    <script src="/assets/js/contract-render.js"></script>
+    <script src="/assets/js/clients.js"></script>
+</body>
+</html>

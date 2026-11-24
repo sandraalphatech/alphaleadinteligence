@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Leads · Alpha Leads Intelligence</title>
+    <link rel="icon" href="/assets/images/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/responsive.css">
+</head>
+<body data-page="leads" data-title="title_leads">
+    <div class="app">
+        <aside class="sidebar" id="sidebar"></aside>
+        <div class="main">
+            <header class="topbar">
+                <div><h1 data-i18n="nav_leads">Leads</h1><p data-i18n="leads_sub"></p></div>
+                <div class="topbar-right">
+                    <div class="lang" role="group" data-i18n-aria="aria_lang" aria-label="Language">
+                        <button type="button" data-lang="pt">PT</button>
+                    </div>
+                    <button class="burger" id="burger" data-i18n-aria="aria_menu" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+                </div>
+            </header>
+            <main class="content">
+                <form class="card filtros" id="form-leads" novalidate>
+                    <label class="campo campo-busca">
+                        <span data-i18n="f_search">Search</span>
+                        <input type="search" id="lf-q" maxlength="80" autocomplete="off" data-i18n-ph="f_search_ph">
+                    </label>
+                    <label class="campo"><span data-i18n="lf_stage">Stage</span><select id="lf-estado"></select></label>
+                    <label class="campo"><span data-i18n="lf_owner">Owner</span><select id="lf-responsavel"></select></label>
+                    <label class="campo"><span data-i18n="f_service">Service</span><select id="lf-servico"></select></label>
+                    <label class="campo"><span data-i18n="lf_class">Rating</span><select id="lf-classificacao"></select></label>
+                    <label class="campo"><span data-i18n="lf_country">Country</span><select id="lf-pais"></select></label>
+                    <label class="campo"><span data-i18n="lf_sector">Sector</span><select id="lf-setor"></select></label>
+                    <label class="campo"><span data-i18n="lf_tasks">Tasks</span><select id="lf-tarefas"></select></label>
+                    <label class="campo"><span data-i18n="lf_contact">Last contact</span><select id="lf-contacto"></select></label>
+                    <label class="campo"><span data-i18n="lf_sort">Sort by</span><select id="lf-ordem"></select></label>
+                    <div class="filtros-fim">
+                        <div class="vista" role="group" id="lf-vista"></div>
+                        <label class="check"><input type="checkbox" id="lf-fechados"><span data-i18n="lf_show_closed">Show closed stages</span></label>
+                        <button type="button" class="btn-link" id="lf-limpar" data-i18n="f_clear">Clear filters</button>
+                    </div>
+                </form>
+
+                <div id="leads-aviso" aria-live="polite"></div>
+                <div class="card">
+                    <div class="card-head"><h2 id="leads-total" data-i18n="loading">Loading…</h2></div>
+                    <div class="card-body leads-corpo" id="leads-vista"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div class="gaveta-fundo" id="gaveta-fundo" hidden></div>
+    <aside class="gaveta" id="gaveta" role="dialog" aria-modal="true" aria-labelledby="gaveta-titulo" tabindex="-1" hidden></aside>
+
+    <script src="/assets/js/i18n.js"></script>
+    <script src="/assets/js/app.js"></script>
+    <script src="/assets/js/contact.js"></script>
+    <script src="/assets/js/leads.js"></script>
+</body>
+</html>

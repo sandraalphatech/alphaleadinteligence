@@ -1,0 +1,306 @@
+{
+    "empresa": {
+        "nome": "Alpha Tech Solutions",
+        "marca": "ALPHA TECH SOLUTIONS",
+        "lema": "Tecnologia à medida para empreendedores",
+        "email": "sandra.alphatech@gmail.com"
+    },
+    "servicos": {
+        "website": {
+            "modelo": "pontual",
+            "pt": {
+                "nome": "Website e páginas de lançamento",
+                "descricao": "Websites, landing pages e lojas online rápidos e claros, pensados para transformar visitas em contactos.",
+                "entregaveis": [
+                    "Estrutura e conteúdos das páginas principais",
+                    "Design responsivo (telemóvel, tablet e computador)",
+                    "Desenvolvimento, otimização de velocidade e SEO base",
+                    "Publicação e acompanhamento no arranque"
+                ]
+            },
+            "en": {
+                "nome": "Website and launch pages",
+                "descricao": "A fast, clear website built to turn visits into enquiries, aligned with the brand.",
+                "entregaveis": [
+                    "Structure and content for the main pages",
+                    "Responsive design (mobile, tablet and desktop)",
+                    "Development, speed optimisation and basic SEO",
+                    "Launch and support during the first weeks"
+                ]
+            },
+            "es": {
+                "nome": "Sitio web y páginas de lanzamiento",
+                "descricao": "Un sitio rápido, claro y pensado para convertir visitas en contactos, alineado con la marca.",
+                "entregaveis": [
+                    "Estructura y contenidos de las páginas principales",
+                    "Diseño adaptable (móvil, tableta y ordenador)",
+                    "Desarrollo, optimización de velocidad y SEO básico",
+                    "Publicación y acompañamiento en el arranque"
+                ]
+            }
+        },
+        "redes_sociais": {
+            "modelo": "mensal",
+            "pt": {
+                "nome": "Gestão de redes sociais",
+                "descricao": "Presença consistente e com estratégia nas redes certas, com conteúdos que contam a história da marca.",
+                "entregaveis": [
+                    "Estratégia e calendário editorial",
+                    "Criação e publicação de conteúdos",
+                    "Gestão da comunidade e das respostas",
+                    "Revisão mensal de desempenho e ajustes"
+                ]
+            },
+            "en": {
+                "nome": "Social media management",
+                "descricao": "A consistent, strategic presence on the right networks, with content that tells the brand's story.",
+                "entregaveis": [
+                    "Strategy and editorial calendar",
+                    "Content creation and publishing",
+                    "Community and reply management",
+                    "Monthly performance review and adjustments"
+                ]
+            },
+            "es": {
+                "nome": "Gestión de redes sociales",
+                "descricao": "Presencia constante y con estrategia en las redes adecuadas, con contenidos que cuentan la historia de la marca.",
+                "entregaveis": [
+                    "Estrategia y calendario editorial",
+                    "Creación y publicación de contenidos",
+                    "Gestión de la comunidad y de las respuestas",
+                    "Revisión mensual del rendimiento y ajustes"
+                ]
+            }
+        },
+        "design_grafico": {
+            "modelo": "pontual",
+            "pt": {
+                "nome": "Design gráfico",
+                "descricao": "Materiais de comunicação com qualidade profissional e a identidade da marca em cada detalhe.",
+                "entregaveis": [
+                    "Apresentações comerciais e institucionais",
+                    "Peças para redes sociais e anúncios",
+                    "Materiais impressos e digitais",
+                    "Ficheiros editáveis e finais para uso interno"
+                ]
+            },
+            "en": {
+                "nome": "Graphic design",
+                "descricao": "Communication materials with professional quality and the brand identity in every detail.",
+                "entregaveis": [
+                    "Sales and company presentations",
+                    "Social media and advertising assets",
+                    "Printed and digital materials",
+                    "Editable and final files for internal use"
+                ]
+            },
+            "es": {
+                "nome": "Diseño gráfico",
+                "descricao": "Materiales de comunicación con calidad profesional y la identidad de marca en cada detalle.",
+                "entregaveis": [
+                    "Presentaciones comerciales e institucionales",
+                    "Piezas para redes sociales y anuncios",
+                    "Materiales impresos y digitales",
+                    "Archivos editables y finales para uso interno"
+                ]
+            }
+        },
+        "sistemas": {
+            "modelo": "pontual",
+            "pt": {
+                "nome": "Sistemas e soluções digitais",
+                "descricao": "Software à medida para a rotina do negócio: painéis, gestão de dados, integrações e plataformas com área de cliente.",
+                "entregaveis": [
+                    "Levantamento de processos e requisitos",
+                    "Sistema, painel administrativo ou plataforma à medida",
+                    "Integrações com APIs (pagamentos, WhatsApp, e-mail)",
+                    "Formação, publicação e acompanhamento no arranque"
+                ]
+            },
+            "en": {
+                "nome": "Systems and digital solutions",
+                "descricao": "Custom software for the way your business runs: dashboards, data management, integrations and platforms with a client area.",
+                "entregaveis": [
+                    "Process and requirements mapping",
+                    "Custom system, admin dashboard or platform",
+                    "API integrations (payments, WhatsApp, email)",
+                    "Training, launch and support during the first weeks"
+                ]
+            },
+            "es": {
+                "nome": "Sistemas y soluciones digitales",
+                "descricao": "Software a medida para la rutina del negocio: paneles, gestión de datos, integraciones y plataformas con área de cliente.",
+                "entregaveis": [
+                    "Levantamiento de procesos y requisitos",
+                    "Sistema, panel administrativo o plataforma a medida",
+                    "Integraciones con APIs (pagos, WhatsApp, correo)",
+                    "Formación, publicación y acompañamiento en el arranque"
+                ]
+            }
+        },
+        "automacao_ia": {
+            "modelo": "pontual",
+            "pt": {
+                "nome": "Automação e inteligência artificial",
+                "descricao": "Tarefas repetitivas a funcionar sozinhas e assistentes de IA que atendem e agendam 24 horas, com a voz do negócio.",
+                "entregaveis": [
+                    "Mapeamento das tarefas a automatizar",
+                    "Automações entre folhas de cálculo, CRM, WhatsApp e pagamentos",
+                    "Assistente de IA para atendimento e agendamento",
+                    "Testes, formação e monitorização inicial"
+                ]
+            },
+            "en": {
+                "nome": "Automation and artificial intelligence",
+                "descricao": "Repetitive tasks that run by themselves and AI assistants that answer and book 24 hours a day, in your business’s voice.",
+                "entregaveis": [
+                    "Mapping of the tasks to automate",
+                    "Automations across spreadsheets, CRM, WhatsApp and payments",
+                    "AI assistant for support and scheduling",
+                    "Testing, training and initial monitoring"
+                ]
+            },
+            "es": {
+                "nome": "Automatización e inteligencia artificial",
+                "descricao": "Tareas repetitivas que funcionan solas y asistentes de IA que atienden y agendan 24 horas, con la voz del negocio.",
+                "entregaveis": [
+                    "Mapeo de las tareas a automatizar",
+                    "Automatizaciones entre hojas de cálculo, CRM, WhatsApp y pagos",
+                    "Asistente de IA para atención y agenda",
+                    "Pruebas, formación y monitorización inicial"
+                ]
+            }
+        },
+        "marketing_digital": {
+            "modelo": "mensal",
+            "pt": {
+                "nome": "Marketing digital",
+                "descricao": "Estratégia e execução dos canais que trazem clientes: SEO, Google Ads e presença online coerente.",
+                "entregaveis": [
+                    "Plano de canais, objetivos e métricas",
+                    "Gestão de campanhas de Google Ads",
+                    "SEO e otimização do perfil no Google",
+                    "Relatório mensal com resultados e próximos passos"
+                ]
+            },
+            "en": {
+                "nome": "Digital marketing",
+                "descricao": "Strategy and execution of the channels that bring customers: SEO, Google Ads and a consistent online presence.",
+                "entregaveis": [
+                    "Channel plan, objectives and metrics",
+                    "Google Ads campaign management",
+                    "SEO and Google profile optimisation",
+                    "Monthly report with results and next steps"
+                ]
+            },
+            "es": {
+                "nome": "Marketing digital",
+                "descricao": "Estrategia y ejecución de los canales que traen clientes: SEO, Google Ads y presencia online coherente.",
+                "entregaveis": [
+                    "Plan de canales, objetivos y métricas",
+                    "Gestión de campañas de Google Ads",
+                    "SEO y optimización del perfil en Google",
+                    "Informe mensual con resultados y próximos pasos"
+                ]
+            }
+        }
+    },
+    "padroes": {
+        "pt": {
+            "pagamento": "Mensalidades faturadas no início de cada mês; trabalhos pontuais: 50% na adjudicação e 50% na entrega. Pagamento a 8 dias.",
+            "passos": [
+                {
+                    "titulo": "Reunião de arranque",
+                    "texto": "30 minutos para alinhar objetivos, prioridades, tom de voz e prazos."
+                },
+                {
+                    "titulo": "Plano e primeiras entregas",
+                    "texto": "Apresentamos o plano de trabalho e entregamos os primeiros resultados no prazo combinado."
+                },
+                {
+                    "titulo": "Execução",
+                    "texto": "Trabalhamos em contínuo com validações curtas, para que nada fique parado à espera de aprovação."
+                },
+                {
+                    "titulo": "Ponto de situação",
+                    "texto": "Revisão regular de resultados e ajuste do plano para o ciclo seguinte."
+                }
+            ],
+            "termos": [
+                "Os valores não incluem custos de terceiros (por exemplo, orçamento de anúncios, licenças ou ferramentas), que são sempre acordados antes.",
+                "Alterações ao âmbito são combinadas por escrito e refletidas no valor antes de começarem.",
+                "A informação partilhada entre as partes é confidencial.",
+                "Esta proposta é válida pelo prazo indicado e pode ser aceite por resposta escrita ou pela assinatura abaixo."
+            ],
+            "porque": [
+                "Uma só equipa para site, sistemas, automação e marketing, a trabalhar em conjunto.",
+                "Plano e calendário claros, com pontos de situação regulares.",
+                "Comunicação direta com quem executa."
+            ]
+        },
+        "en": {
+            "pagamento": "Monthly fees invoiced at the start of each month; one-off projects: 50% on approval and 50% on delivery. Payment within 8 days.",
+            "passos": [
+                {
+                    "titulo": "Kickoff call",
+                    "texto": "30 minutes to align on goals, priorities, tone of voice and timing."
+                },
+                {
+                    "titulo": "Plan and first deliverables",
+                    "texto": "We present the work plan and deliver the first results on the agreed date."
+                },
+                {
+                    "titulo": "Execution",
+                    "texto": "We work continuously with short approvals, so nothing sits waiting."
+                },
+                {
+                    "titulo": "Review",
+                    "texto": "Regular review of results and plan adjustments for the next cycle."
+                }
+            ],
+            "termos": [
+                "Fees exclude third-party costs (for example, ad budget, licences or tools), which are always agreed in advance.",
+                "Changes to scope are agreed in writing and reflected in the fee before they start.",
+                "Information shared between the parties is confidential.",
+                "This proposal is valid for the period stated and can be accepted by written reply or by signing below."
+            ],
+            "porque": [
+                "One team for website, systems, automation and marketing, working together.",
+                "A clear plan and calendar, with regular check-ins.",
+                "Direct communication with the people doing the work."
+            ]
+        },
+        "es": {
+            "pagamento": "Cuotas mensuales facturadas al inicio de cada mes; trabajos puntuales: 50% a la adjudicación y 50% a la entrega. Pago a 8 días.",
+            "passos": [
+                {
+                    "titulo": "Reunión de arranque",
+                    "texto": "30 minutos para alinear objetivos, prioridades, tono de voz y plazos."
+                },
+                {
+                    "titulo": "Plan y primeras entregas",
+                    "texto": "Presentamos el plan de trabajo y entregamos los primeros resultados en el plazo acordado."
+                },
+                {
+                    "titulo": "Ejecución",
+                    "texto": "Trabajamos de forma continua con validaciones cortas, para que nada quede esperando aprobación."
+                },
+                {
+                    "titulo": "Seguimiento",
+                    "texto": "Revisión periódica de resultados y ajuste del plan para el ciclo siguiente."
+                }
+            ],
+            "termos": [
+                "Los importes no incluyen costes de terceros (por ejemplo, presupuesto de anuncios, licencias o herramientas), que siempre se acuerdan antes.",
+                "Los cambios de alcance se acuerdan por escrito y se reflejan en el importe antes de empezar.",
+                "La información compartida entre las partes es confidencial.",
+                "Esta propuesta es válida durante el plazo indicado y puede aceptarse por respuesta escrita o con la firma de abajo."
+            ],
+            "porque": [
+                "Un solo equipo para web, sistemas, automatización y marketing, trabajando juntos.",
+                "Plan y calendario claros, con seguimientos periódicos.",
+                "Comunicación directa con quien ejecuta."
+            ]
+        }
+    }
+}

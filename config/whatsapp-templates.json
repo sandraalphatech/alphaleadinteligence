@@ -1,0 +1,329 @@
+{
+    "_ajuda": "Modelos de mensagem do WhatsApp. A Meta SÓ deixa iniciar uma conversa com um modelo aprovado, de texto fixo. Há um modelo \"generico\" (reserva, com as variáveis {{1}}, {{2}} e {{3}} que a IA propõe), um por serviço (o que a análise recomenda para a empresa) e um \"followup\", em pt (Portugal), pt_BR, en e es. Os de serviço e o follow-up são de texto fixo, SEM variáveis, e levam dois botões de resposta rápida (\"botoes\"). Nomes: <serviço>_pt_eu, _pt_br, _en e _es; followup_pt_eu, _pt_br, _en e _es. Cria-os na Meta (categoria MARKETING) com o mesmo nome, idioma e texto que estão aqui (docs/whatsapp-templates.md tem a lista completa para copiar; ou corra \"node scripts/create-whatsapp-templates.js\"). A plataforma só usa um modelo se estiver APROVADO na Meta (precisa de WHATSAPP_WABA_ID); um modelo com \"ativo\": false fica de fora. O \"followup\" só se envia a quem não respondeu à primeira mensagem, passados 3 dias úteis (uma só vez). Se mudares um texto aqui, muda-o igual na Meta (e espera pela nova aprovação).",
+    "variaveis": {
+        "1": {
+            "nome": "empresa",
+            "max": 60
+        },
+        "2": {
+            "nome": "facto",
+            "max": 140
+        },
+        "3": {
+            "nome": "leitura",
+            "max": 160
+        }
+    },
+    "exemplos": {
+        "pt": [
+            "Celes",
+            "a notícia da ronda Serie A de 5 milhões de dólares",
+            "converter esse capital em marca e procura de retalhistas pede uma comunicação clara desde o início"
+        ],
+        "pt_BR": [
+            "Velvet",
+            "a plataforma de assinaturas com criadores",
+            "atrair mais criadores com audiência amplia a oferta de conteúdos"
+        ],
+        "en": [
+            "Payhawk",
+            "the news of the Series C round",
+            "scaling one platform to more B2B customers needs a clear message from day one"
+        ],
+        "es": [
+            "Zazume",
+            "la noticia de la compra del 40% de Garanty Home",
+            "unir dos marcas y una red de franquicias exige una identidad coherente desde el principio"
+        ]
+    },
+    "modelos": {
+        "generico": {
+            "pt": {
+                "name": "alpha_intro_pt",
+                "language": "pt_PT",
+                "corpo": "Olá, equipa da {{1}}! Vi {{2}}. Parece-me que {{3}}.\n\nNa Alpha Tech Solutions ajudamos empresas como a vossa com websites, sistemas à medida, automação e IA e marketing digital. Faz sentido uma conversa rápida de 15 minutos para partilhar duas ou três ideias concretas?\n\nPara não receber mais mensagens nossas, responda PARAR."
+            },
+            "pt_BR": {
+                "name": "alpha_intro_pt_br",
+                "language": "pt_BR",
+                "corpo": "Olá, equipe da {{1}}! Vi {{2}}. Me parece que {{3}}.\n\nNa Alpha Tech Solutions ajudamos empresas como a de vocês com sites, sistemas sob medida, automação e IA e marketing digital. Faz sentido uma conversa rápida de 15 minutos para compartilhar duas ou três ideias concretas?\n\nPara não receber mais mensagens nossas, responda PARAR."
+            },
+            "en": {
+                "name": "alpha_intro_en",
+                "language": "en",
+                "corpo": "Hi {{1}} team! I saw {{2}}. It seems to me that {{3}}.\n\nAt Alpha Tech Solutions we help companies like yours with websites, custom systems, automation and AI and digital marketing. Would a quick 15-minute call make sense, so we can share two or three concrete ideas?\n\nTo stop receiving our messages, reply STOP."
+            },
+            "es": {
+                "name": "alpha_intro_es",
+                "language": "es",
+                "corpo": "Hola, equipo de {{1}}: vi {{2}}. Me parece que {{3}}.\n\nEn Alpha Tech Solutions ayudamos a empresas como la suya con sitios web, sistemas a medida, automatización e IA y marketing digital. ¿Tiene sentido una conversación rápida de 15 minutos para compartir dos o tres ideas concretas?\n\nPara no recibir más mensajes nuestros, responda PARAR."
+            }
+        },
+        "sistemas": {
+            "pt": {
+                "name": "sistemas_pt_eu",
+                "language": "pt_PT",
+                "corpo": "Olá!\n\nSomos a *Alpha Tech Solutions* e criamos sistemas à medida para empresas que ainda gerem clientes, vendas e agenda em Excel e WhatsApp: painéis de gestão, áreas de cliente e plataformas web.\n\nAcreditamos que existem oportunidades para poupar tempo à vossa equipa, ter os dados organizados num só lugar e acompanhar o negócio em tempo real.\n\n_Gostaríamos de apresentar algumas ideias concretas pensadas para o vosso negócio._\n\n*Estariam disponíveis para uma reunião rápida para descobrir como um sistema à medida poderia simplificar a vossa operação?*",
+                "botoes": [
+                    "Sim, mais informações por favor!",
+                    "Não, obrigado!"
+                ]
+            },
+            "pt_BR": {
+                "name": "sistemas_pt_br",
+                "language": "pt_BR",
+                "corpo": "Olá!\n\nSomos a *Alpha Tech Solutions* e criamos sistemas sob medida para empresas que ainda gerenciam clientes, vendas e agenda no Excel e no WhatsApp: painéis de gestão, áreas do cliente e plataformas web.\n\nAcreditamos que existem oportunidades para economizar tempo da sua equipe, ter os dados organizados em um só lugar e acompanhar o negócio em tempo real.\n\n_Gostaríamos de apresentar algumas ideias concretas pensadas para o seu negócio._\n\n*Você teria disponibilidade para uma reunião rápida para descobrir como um sistema sob medida poderia simplificar a sua operação?*",
+                "botoes": [
+                    "Sim, mais informações por favor!",
+                    "Não, obrigado!"
+                ]
+            },
+            "en": {
+                "name": "sistemas_en",
+                "language": "en",
+                "corpo": "Hello!\n\nWe are *Alpha Tech Solutions*, and we build custom systems for businesses that still manage clients, sales and scheduling in Excel and WhatsApp: management dashboards, client portals and web platforms.\n\nWe believe there are opportunities to save your team time, keep your data in one place and follow the business in real time.\n\n_We would like to share a few concrete ideas designed for your business._\n\n*Would you be available for a quick meeting to find out how a custom system could simplify your operation?*",
+                "botoes": [
+                    "Yes, more information please!",
+                    "No, Thanks!"
+                ]
+            },
+            "es": {
+                "name": "sistemas_es",
+                "language": "es",
+                "corpo": "¡Hola!\n\nSomos *Alpha Tech Solutions* y creamos sistemas a medida para empresas que aún gestionan clientes, ventas y agenda en Excel y WhatsApp: paneles de gestión, áreas de cliente y plataformas web.\n\nCreemos que existen oportunidades para ahorrar tiempo a vuestro equipo, tener los datos organizados en un solo lugar y seguir el negocio en tiempo real.\n\n_Nos gustaría presentaros algunas ideas concretas pensadas para vuestro negocio._\n\n*¿Estaríais disponibles para una reunión rápida para descubrir cómo un sistema a medida podría simplificar vuestra operación?*",
+                "botoes": [
+                    "Sí, más información, por favor!",
+                    "No, gracias!"
+                ]
+            }
+        },
+        "website": {
+            "pt": {
+                "name": "website_pt_eu",
+                "language": "pt_PT",
+                "corpo": "Olá!\n\nSomos a *Alpha Tech Solutions* e ajudamos empresas a desenvolver a sua presença digital através de websites profissionais, modernos e orientados para resultados.\n\nHoje, ter um website não é apenas uma questão de presença online: é também uma oportunidade para transmitir credibilidade, apresentar serviços e transformar visitantes em potenciais clientes.\n\n_Gostaríamos de apresentar algumas possibilidades para reforçar a presença digital da vossa empresa._\n\n*Faria sentido marcarmos uma reunião de 15 minutos para vos mostrar como um website estratégico poderia gerar novas oportunidades de negócio?*",
+                "botoes": [
+                    "Sim, mais informações por favor!",
+                    "Não, obrigado!"
+                ]
+            },
+            "pt_BR": {
+                "name": "website_pt_br",
+                "language": "pt_BR",
+                "corpo": "Olá!\n\nSomos a *Alpha Tech Solutions* e ajudamos empresas a desenvolver sua presença digital por meio de sites profissionais, modernos e orientados a resultados.\n\nHoje, ter um site não é apenas uma questão de presença online: é também uma oportunidade de transmitir credibilidade, apresentar serviços e transformar visitantes em potenciais clientes.\n\n_Gostaríamos de apresentar algumas possibilidades para fortalecer a presença digital da sua empresa._\n\n*Faria sentido marcarmos uma reunião de 15 minutos para mostrar como um site estratégico poderia gerar novas oportunidades de negócio?*",
+                "botoes": [
+                    "Sim, mais informações por favor!",
+                    "Não, obrigado!"
+                ]
+            },
+            "en": {
+                "name": "website_en",
+                "language": "en",
+                "corpo": "Hello!\n\nWe are *Alpha Tech Solutions*, and we help businesses build their digital presence through professional, modern, results-driven websites.\n\nToday, having a website is not just about being online: it is also an opportunity to build credibility, showcase your services and turn visitors into potential customers.\n\n_We would love to share a few possibilities to strengthen your company’s digital presence._\n\n*Would it make sense to schedule a 15-minute meeting to show you how a strategic website could create new business opportunities?*",
+                "botoes": [
+                    "Yes, more information please!",
+                    "No, Thanks!"
+                ]
+            },
+            "es": {
+                "name": "website_es",
+                "language": "es",
+                "corpo": "¡Hola!\n\nSomos *Alpha Tech Solutions* y ayudamos a empresas a desarrollar su presencia digital mediante sitios web profesionales, modernos y orientados a resultados.\n\nHoy, tener un sitio web no es solo una cuestión de presencia en línea: es también una oportunidad para transmitir credibilidad, presentar servicios y convertir visitantes en potenciales clientes.\n\n_Nos gustaría presentaros algunas posibilidades para reforzar la presencia digital de vuestra empresa._\n\n*¿Tendría sentido concertar una reunión de 15 minutos para mostraros cómo un sitio web estratégico podría generar nuevas oportunidades de negocio?*",
+                "botoes": [
+                    "Sí, más información, por favor!",
+                    "No, gracias!"
+                ]
+            }
+        },
+        "marketing_digital": {
+            "pt": {
+                "name": "marketing_digital_pt_eu",
+                "language": "pt_PT",
+                "corpo": "Olá!\n\nSomos a *Alpha Tech Solutions* e ajudamos empresas a aumentar a sua visibilidade e a captar novos clientes através de estratégias de marketing digital.\n\nAcreditamos que existem oportunidades para melhorar o alcance da vossa marca, chegar ao público certo e transformar a presença digital em resultados comerciais.\n\n_Gostaríamos de apresentar algumas estratégias que poderão contribuir para o crescimento do vosso negócio._\n\n*Se vos conseguíssemos apresentar formas de atrair mais clientes através do digital, estariam disponíveis para uma breve reunião?*",
+                "botoes": [
+                    "Sim, mais informações por favor!",
+                    "Não, obrigado!"
+                ]
+            },
+            "pt_BR": {
+                "name": "marketing_digital_pt_br",
+                "language": "pt_BR",
+                "corpo": "Olá!\n\nSomos a *Alpha Tech Solutions* e ajudamos empresas a aumentar sua visibilidade e a conquistar novos clientes por meio de estratégias de marketing digital.\n\nAcreditamos que existem oportunidades para ampliar o alcance da sua marca, chegar ao público certo e transformar a presença digital em resultados comerciais.\n\n_Gostaríamos de apresentar algumas estratégias que podem contribuir para o crescimento do seu negócio._\n\n*Se conseguíssemos mostrar formas de atrair mais clientes pelo digital, você teria disponibilidade para uma breve reunião?*",
+                "botoes": [
+                    "Sim, mais informações por favor!",
+                    "Não, obrigado!"
+                ]
+            },
+            "en": {
+                "name": "marketing_digital_en",
+                "language": "en",
+                "corpo": "Hello!\n\nWe are *Alpha Tech Solutions*, and we help businesses increase their visibility and win new customers through digital marketing strategies.\n\nWe believe there are opportunities to extend your brand’s reach, connect with the right audience and turn your digital presence into business results.\n\n_We would like to share a few strategies that could help your business grow._\n\n*If we could show you ways to attract more customers through digital channels, would you be available for a short meeting?*",
+                "botoes": [
+                    "Yes, more information please!",
+                    "No, Thanks!"
+                ]
+            },
+            "es": {
+                "name": "marketing_digital_es",
+                "language": "es",
+                "corpo": "¡Hola!\n\nSomos *Alpha Tech Solutions* y ayudamos a empresas a aumentar su visibilidad y a captar nuevos clientes mediante estrategias de marketing digital.\n\nCreemos que existen oportunidades para ampliar el alcance de vuestra marca, llegar al público adecuado y convertir la presencia digital en resultados comerciales.\n\n_Nos gustaría presentaros algunas estrategias que pueden contribuir al crecimiento de vuestro negocio._\n\n*Si pudiéramos mostraros formas de atraer más clientes a través del entorno digital, ¿estaríais disponibles para una breve reunión?*",
+                "botoes": [
+                    "Sí, más información, por favor!",
+                    "No, gracias!"
+                ]
+            }
+        },
+        "redes_sociais": {
+            "pt": {
+                "name": "redes_sociais_pt_eu",
+                "language": "pt_PT",
+                "corpo": "Olá!\n\nSomos a *Alpha Tech Solutions* e trabalhamos na gestão e estratégia de redes sociais para empresas que pretendem reforçar a sua presença digital e aproximar-se dos seus potenciais clientes.\n\nUma presença consistente nas redes sociais pode representar uma excelente oportunidade para aumentar a notoriedade da marca, gerar confiança e atrair novos negócios.\n\n_Gostaríamos de partilhar algumas ideias para tornar a comunicação digital da vossa empresa mais estratégica e eficaz._\n\n*Podemos agendar uma breve reunião para vos apresentar algumas oportunidades de melhoria e crescimento nas vossas redes sociais?*",
+                "botoes": [
+                    "Sim, mais informações por favor!",
+                    "Não, obrigado!"
+                ]
+            },
+            "pt_BR": {
+                "name": "redes_sociais_pt_br",
+                "language": "pt_BR",
+                "corpo": "Olá!\n\nSomos a *Alpha Tech Solutions* e trabalhamos com a gestão e a estratégia de redes sociais para empresas que querem fortalecer sua presença digital e se aproximar dos potenciais clientes.\n\nUma presença consistente nas redes sociais pode ser uma excelente oportunidade para aumentar o reconhecimento da marca, gerar confiança e atrair novos negócios.\n\n_Gostaríamos de compartilhar algumas ideias para tornar a comunicação digital da sua empresa mais estratégica e eficaz._\n\n*Podemos agendar uma breve reunião para apresentar algumas oportunidades de melhoria e crescimento nas suas redes sociais?*",
+                "botoes": [
+                    "Sim, mais informações por favor!",
+                    "Não, obrigado!"
+                ]
+            },
+            "en": {
+                "name": "redes_sociais_en",
+                "language": "en",
+                "corpo": "Hello!\n\nWe are *Alpha Tech Solutions*, and we work on social media management and strategy for businesses that want to strengthen their digital presence and get closer to potential customers.\n\nA consistent social media presence can be an excellent opportunity to increase brand awareness, build trust and attract new business.\n\n_We would like to share a few ideas to make your company’s digital communication more strategic and effective._\n\n*Can we schedule a short meeting to present some opportunities to improve and grow your social media channels?*",
+                "botoes": [
+                    "Yes, more information please!",
+                    "No, Thanks!"
+                ]
+            },
+            "es": {
+                "name": "redes_sociais_es",
+                "language": "es",
+                "corpo": "¡Hola!\n\nSomos *Alpha Tech Solutions* y trabajamos en la gestión y la estrategia de redes sociales para empresas que quieren reforzar su presencia digital y acercarse a sus potenciales clientes.\n\nUna presencia constante en redes sociales puede ser una excelente oportunidad para aumentar la notoriedad de la marca, generar confianza y atraer nuevos negocios.\n\n_Nos gustaría compartir algunas ideas para que la comunicación digital de vuestra empresa sea más estratégica y eficaz._\n\n*¿Podemos agendar una breve reunión para presentaros algunas oportunidades de mejora y crecimiento en vuestras redes sociales?*",
+                "botoes": [
+                    "Sí, más información, por favor!",
+                    "No, gracias!"
+                ]
+            }
+        },
+        "automacao_ia": {
+            "pt": {
+                "name": "automacao_ia_pt_eu",
+                "language": "pt_PT",
+                "corpo": "Olá!\n\nSomos a *Alpha Tech Solutions* e ajudamos empresas a automatizar tarefas repetitivas: atendimento e marcações por WhatsApp, cobranças, relatórios e ligação entre as ferramentas que já usam, com assistentes de IA disponíveis 24 horas.\n\nAcreditamos que existem oportunidades para libertar horas de trabalho manual da vossa equipa e responder mais depressa aos vossos clientes.\n\n_Gostaríamos de apresentar algumas possibilidades pensadas para o vosso negócio._\n\n*Estariam disponíveis para uma reunião rápida para descobrir o que poderia ser automatizado na vossa empresa?*",
+                "botoes": [
+                    "Sim, mais informações por favor!",
+                    "Não, obrigado!"
+                ]
+            },
+            "pt_BR": {
+                "name": "automacao_ia_pt_br",
+                "language": "pt_BR",
+                "corpo": "Olá!\n\nSomos a *Alpha Tech Solutions* e ajudamos empresas a automatizar tarefas repetitivas: atendimento e agendamentos por WhatsApp, cobranças, relatórios e integração entre as ferramentas que já usam, com assistentes de IA disponíveis 24 horas.\n\nAcreditamos que existem oportunidades para liberar horas de trabalho manual da sua equipe e responder mais rápido aos seus clientes.\n\n_Gostaríamos de apresentar algumas possibilidades pensadas para o seu negócio._\n\n*Você teria disponibilidade para uma reunião rápida para descobrir o que poderia ser automatizado na sua empresa?*",
+                "botoes": [
+                    "Sim, mais informações por favor!",
+                    "Não, obrigado!"
+                ]
+            },
+            "en": {
+                "name": "automacao_ia_en",
+                "language": "en",
+                "corpo": "Hello!\n\nWe are *Alpha Tech Solutions*, and we help businesses automate repetitive tasks: WhatsApp support and bookings, billing, reports and connections between the tools they already use, with AI assistants available 24 hours a day.\n\nWe believe there are opportunities to free up hours of manual work for your team and reply faster to your customers.\n\n_We would like to present a few possibilities designed for your business._\n\n*Would you be available for a quick meeting to find out what could be automated in your company?*",
+                "botoes": [
+                    "Yes, more information please!",
+                    "No, Thanks!"
+                ]
+            },
+            "es": {
+                "name": "automacao_ia_es",
+                "language": "es",
+                "corpo": "¡Hola!\n\nSomos *Alpha Tech Solutions* y ayudamos a empresas a automatizar tareas repetitivas: atención y citas por WhatsApp, cobros, informes y conexión entre las herramientas que ya usan, con asistentes de IA disponibles las 24 horas.\n\nCreemos que existen oportunidades para liberar horas de trabajo manual de vuestro equipo y responder más rápido a vuestros clientes.\n\n_Nos gustaría presentaros algunas posibilidades pensadas para vuestro negocio._\n\n*¿Estaríais disponibles para una reunión rápida para descubrir qué se podría automatizar en vuestra empresa?*",
+                "botoes": [
+                    "Sí, más información, por favor!",
+                    "No, gracias!"
+                ]
+            }
+        },
+        "design_grafico": {
+            "pt": {
+                "name": "design_grafico_pt_eu",
+                "language": "pt_PT",
+                "corpo": "Olá!\n\nSomos a *Alpha Tech Solutions* e ajudamos empresas a comunicar melhor através de soluções de design gráfico e comunicação visual.\n\nAcreditamos que uma comunicação visual profissional e consistente é fundamental para destacar uma marca, transmitir confiança e criar uma imagem diferenciadora junto dos clientes.\n\n_Gostaríamos de apresentar algumas ideias para valorizar a comunicação visual da vossa empresa._\n\n*Fariam sentido 15 minutos de conversa para vos mostrarmos como poderíamos elevar a imagem e a comunicação da vossa marca?*",
+                "botoes": [
+                    "Sim, mais informações por favor!",
+                    "Não, obrigado!"
+                ]
+            },
+            "pt_BR": {
+                "name": "design_grafico_pt_br",
+                "language": "pt_BR",
+                "corpo": "Olá!\n\nSomos a *Alpha Tech Solutions* e ajudamos empresas a se comunicar melhor por meio de soluções de design gráfico e comunicação visual.\n\nAcreditamos que uma comunicação visual profissional e consistente é fundamental para destacar uma marca, transmitir confiança e criar uma imagem diferenciada junto aos clientes.\n\n_Gostaríamos de apresentar algumas ideias para valorizar a comunicação visual da sua empresa._\n\n*Faria sentido uma conversa de 15 minutos para mostrarmos como poderíamos elevar a imagem e a comunicação da sua marca?*",
+                "botoes": [
+                    "Sim, mais informações por favor!",
+                    "Não, obrigado!"
+                ]
+            },
+            "en": {
+                "name": "design_grafico_en",
+                "language": "en",
+                "corpo": "Hello!\n\nWe are *Alpha Tech Solutions*, and we help businesses communicate better through graphic design and visual communication solutions.\n\nWe believe professional, consistent visual communication is essential to make a brand stand out, build trust and create a distinctive image with customers.\n\n_We would like to share a few ideas to enhance your company’s visual communication._\n\n*Would 15 minutes of conversation make sense, so we can show you how we could elevate your brand’s image and communication?*",
+                "botoes": [
+                    "Yes, more information please!",
+                    "No, Thanks!"
+                ]
+            },
+            "es": {
+                "name": "design_grafico_es",
+                "language": "es",
+                "corpo": "¡Hola!\n\nSomos *Alpha Tech Solutions* y ayudamos a empresas a comunicar mejor mediante soluciones de diseño gráfico y comunicación visual.\n\nCreemos que una comunicación visual profesional y coherente es fundamental para destacar una marca, transmitir confianza y crear una imagen diferenciadora ante los clientes.\n\n_Nos gustaría presentaros algunas ideas para valorizar la comunicación visual de vuestra empresa._\n\n*¿Tendrían sentido 15 minutos de conversación para mostraros cómo podríamos elevar la imagen y la comunicación de vuestra marca?*",
+                "botoes": [
+                    "Sí, más información, por favor!",
+                    "No, gracias!"
+                ]
+            }
+        },
+        "followup": {
+            "pt": {
+                "name": "followup_pt_eu",
+                "language": "pt_PT",
+                "corpo": "Olá!\n\nVoltamos ao contacto porque acreditamos que poderá existir uma oportunidade interessante de colaboração entre a vossa empresa e a *Alpha Tech Solutions.*\n\nGostaríamos de partilhar algumas ideias e perceber se existe interesse em explorar novas possibilidades para o vosso negócio.\n\n*Faz sentido reservarmos 15 minutos esta semana para percebermos se podemos acrescentar valor à vossa empresa?*",
+                "botoes": [
+                    "Sim, mais informações por favor!",
+                    "Não, obrigado!"
+                ]
+            },
+            "pt_BR": {
+                "name": "followup_pt_br",
+                "language": "pt_BR",
+                "corpo": "Olá!\n\nVoltamos a entrar em contato porque acreditamos que pode existir uma oportunidade interessante de colaboração entre a sua empresa e a *Alpha Tech Solutions.*\n\nGostaríamos de compartilhar algumas ideias e entender se existe interesse em explorar novas possibilidades para o seu negócio.\n\n*Faz sentido reservarmos 15 minutos esta semana para entendermos se podemos agregar valor à sua empresa?*",
+                "botoes": [
+                    "Sim, mais informações por favor!",
+                    "Não, obrigado!"
+                ]
+            },
+            "en": {
+                "name": "followup_en",
+                "language": "en",
+                "corpo": "Hello!\n\nWe are getting back in touch because we believe there may be an interesting opportunity for collaboration between your company and *Alpha Tech Solutions.*\n\nWe would like to share a few ideas and understand whether there is interest in exploring new possibilities for your business.\n\n*Does it make sense to set aside 15 minutes this week to see whether we can add value to your company?*",
+                "botoes": [
+                    "Yes, more information please!",
+                    "No, Thanks!"
+                ]
+            },
+            "es": {
+                "name": "followup_es",
+                "language": "es",
+                "corpo": "¡Hola!\n\nVolvemos a ponernos en contacto porque creemos que puede existir una oportunidad interesante de colaboración entre vuestra empresa y *Alpha Tech Solutions.*\n\nNos gustaría compartir algunas ideas y saber si existe interés en explorar nuevas posibilidades para vuestro negocio.\n\n*¿Tiene sentido reservar 15 minutos esta semana para ver si podemos aportar valor a vuestra empresa?*",
+                "botoes": [
+                    "Sí, más información, por favor!",
+                    "No, gracias!"
+                ]
+            }
+        }
+    }
+}

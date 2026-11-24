@@ -1,0 +1,114 @@
+/* proposal.css: o documento da proposta (A4) e a impressão para PDF. As classes .prop-* só se usam dentro do documento. */
+
+.prop-doc {
+    --p-ink: #1b1b2f; --p-ink2: #4a4a63; --p-mute: #7a7a92; --p-line: #e4e5ee; --p-box: #f5f5fb;
+    --p-a: #14b4dc; --p-b: #4b2c8c; --p-blue: #2d6bd6; --p-ok: #1f7a45;
+    width: 210mm; min-height: 297mm; box-sizing: border-box; padding: 16mm 17mm 20mm; background: #fff; color: var(--p-ink);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 10.2pt; line-height: 1.55; position: relative;
+}
+.prop-doc * { box-sizing: border-box; }
+.prop-doc p { margin: 0; }
+.prop-doc ul, .prop-doc ol { margin: 0; padding: 0; list-style: none; }
+.prop-doc small { font-size: 8pt; }
+
+/* cabeçalho */
+.prop-cab { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.prop-marca { display: flex; align-items: center; gap: 12px; }
+.prop-marca img { width: 15mm; height: 15mm; border-radius: 3.4mm; display: block; }
+.prop-marca b { display: block; font-size: 11.5pt; letter-spacing: .04em; line-height: 1.2; }
+.prop-marca span { display: block; font-size: 7.4pt; letter-spacing: .14em; text-transform: uppercase; color: var(--p-mute); margin-top: 2px; }
+.prop-meta { text-align: right; font-size: 8.4pt; color: var(--p-ink2); line-height: 1.7; }
+.prop-meta span { display: block; }
+.prop-meta span:first-child { font-weight: 700; color: var(--p-ink); }
+.prop-barra { height: 3mm; margin: 7mm 0 8mm; border-radius: 2px; background: linear-gradient(90deg, var(--p-a), var(--p-b)); }
+
+/* título e resumo */
+.prop-doc h1 { margin: 0 0 2mm; font-size: 21pt; line-height: 1.2; letter-spacing: -.01em; font-weight: 700; }
+.prop-para { color: var(--p-ink2); font-size: 9.6pt; margin-bottom: 8mm; }
+.prop-para b { color: var(--p-ink); }
+.prop-resumo { background: var(--p-box); border-left: 1mm solid var(--p-blue); border-radius: 1.5mm; padding: 5mm 6mm; margin-bottom: 8mm; break-inside: avoid; }
+.prop-resumo p + p { margin-top: 3mm; }
+.prop-resumo p:first-child { font-weight: 500; }
+
+/* secções */
+.prop-sec { margin-bottom: 8mm; break-inside: avoid; }
+.prop-sec.prop-escopo { break-inside: auto; }
+.prop-doc h2 { margin: 0 0 3.5mm; font-size: 13.5pt; font-weight: 700; letter-spacing: -.005em; break-after: avoid; }
+.prop-doc h2::after { content: ''; display: block; width: 14mm; height: 1.2mm; margin-top: 1.6mm; border-radius: 1px; background: linear-gradient(90deg, var(--p-a), var(--p-b)); }
+.prop-checks li, .prop-termos li, .prop-card li { position: relative; padding-left: 5mm; margin-bottom: 1.6mm; }
+.prop-checks li::before { content: ''; position: absolute; left: .4mm; top: 1.5mm; width: 2.2mm; height: 1.2mm; border-left: .5mm solid var(--p-ok); border-bottom: .5mm solid var(--p-ok); transform: rotate(-45deg); }
+.prop-card li::before, .prop-termos li::before { content: ''; position: absolute; left: .8mm; top: 2.2mm; width: 1.4mm; height: 1.4mm; border-radius: 50%; background: var(--p-b); }
+.prop-termos li { font-size: 8.6pt; color: var(--p-ink2); margin-bottom: 1.2mm; }
+
+/* cartões de serviço */
+.prop-linha { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; margin-bottom: 5mm; break-inside: avoid; }
+.prop-linha.unica { grid-template-columns: 1fr; }
+.prop-grupo { break-inside: avoid; }
+.prop-card { border: .3mm solid var(--p-line); border-radius: 2.4mm; padding: 5mm; break-inside: avoid; background: #fff; }
+.prop-card header { display: flex; justify-content: space-between; align-items: flex-start; gap: 4mm; padding-bottom: 3mm; margin-bottom: 3mm; border-bottom: .3mm solid var(--p-line); }
+.prop-card h3 { margin: 0; font-size: 10.6pt; line-height: 1.3; font-weight: 700; }
+.prop-preco { text-align: right; flex-shrink: 0; max-width: 40%; }
+.prop-preco b { display: block; font-size: 13pt; line-height: 1.15; color: var(--p-blue); }
+.prop-preco small { display: block; color: var(--p-mute); margin-top: .5mm; line-height: 1.3; }
+.prop-desc { color: var(--p-ink2); font-size: 9pt; margin-bottom: 3.5mm; }
+.prop-card li { font-size: 9pt; }
+.prop-nota { margin-top: 3mm; font-size: 8pt; font-style: italic; color: var(--p-mute); }
+
+/* investimento */
+.prop-invest { break-inside: avoid; }
+.prop-tabela { width: 100%; border-collapse: collapse; font-size: 9.4pt; }
+.prop-tabela th { text-align: left; font-size: 7.6pt; letter-spacing: .1em; text-transform: uppercase; color: var(--p-mute); padding: 2mm 3mm; border-bottom: .4mm solid var(--p-ink); }
+.prop-tabela td { padding: 2.6mm 3mm; border-bottom: .3mm solid var(--p-line); vertical-align: top; }
+.prop-tabela .num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.prop-tabela td.num { font-weight: 600; }
+.prop-tabela td.num small { font-weight: 400; color: var(--p-mute); }
+.prop-tabela tr.tot td { font-weight: 700; background: var(--p-box); border-bottom-color: #fff; }
+.prop-tabela tr.liq td { font-weight: 700; color: var(--p-b); }
+.prop-iva { margin-top: 3mm; font-size: 8.2pt; color: var(--p-mute); }
+.prop-cond { margin: 5mm 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 3.5mm 6mm; }
+.prop-cond div { break-inside: avoid; }
+.prop-cond dt { font-size: 7.6pt; letter-spacing: .1em; text-transform: uppercase; color: var(--p-mute); margin-bottom: .6mm; }
+.prop-cond dd { margin: 0; font-size: 9.2pt; }
+
+/* como funciona */
+.prop-passos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4mm; }
+.prop-passos li { break-inside: avoid; }
+.prop-passos .n { display: inline-flex; align-items: center; justify-content: center; width: 6.4mm; height: 6.4mm; border-radius: 50%; color: #fff; font-weight: 700; font-size: 8.4pt; background: linear-gradient(135deg, var(--p-a), var(--p-b)); margin-bottom: 2mm; }
+.prop-passos b { display: block; font-size: 9.4pt; margin-bottom: 1mm; }
+.prop-passos p { font-size: 8.6pt; color: var(--p-ink2); line-height: 1.5; }
+.prop-porque { background: var(--p-box); border-radius: 2.4mm; padding: 5mm 6mm; break-inside: avoid; }
+.prop-texto p + p { margin-top: 2.5mm; }
+.prop-texto { font-size: 9.4pt; color: var(--p-ink2); }
+
+/* aceitação */
+.prop-fim { break-inside: avoid; }
+.prop-fim > p { color: var(--p-ink2); margin-bottom: 8mm; }
+.prop-assina { display: grid; grid-template-columns: 1fr 1fr; gap: 12mm; margin-top: 4mm; }
+.prop-assina div { display: flex; flex-direction: column; }
+.prop-assina span { font-size: 7.8pt; letter-spacing: .1em; text-transform: uppercase; color: var(--p-mute); }
+.prop-assina i { display: block; height: 14mm; border-bottom: .3mm solid var(--p-ink); }
+.prop-assina small { margin-top: 1.6mm; color: var(--p-ink2); font-size: 8.2pt; }
+
+/* rodapé: no ecrã fica no fim; na impressão repete-se em todas as páginas */
+.prop-rodape { margin-top: 10mm; padding-top: 3mm; border-top: .3mm solid var(--p-line); display: flex; justify-content: space-between; font-size: 8pt; color: var(--p-mute); }
+.prop-rodape b { color: var(--p-ink); font-weight: 600; }
+
+/* pré-visualização no ecrã: folha de papel com sombra */
+.prop-papel { background: #e9eaf2; border-radius: 14px; padding: 18px; overflow: auto; }
+.prop-papel .prop-doc { margin: 0 auto; box-shadow: 0 6px 30px rgba(24, 24, 60, .18); zoom: var(--prop-zoom, .72); }
+
+#prop-impressao { display: none; }
+
+@media print {
+    @page { size: A4; margin: 14mm 0; }
+    html, body { background: #fff !important; }
+    body.imprimir-proposta > *:not(#prop-impressao) { display: none !important; }
+    body.imprimir-proposta #prop-impressao { display: block !important; }
+    body.imprimir-proposta { margin: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    #prop-impressao .prop-doc { box-shadow: none; zoom: 1; width: 210mm; min-height: 0; padding: 0 17mm; }
+}
+
+/* Valor final do contrato e calendário de pagamentos */
+.prop-tabela tr.final td { font-size: 1.05em; border-top: 2px solid currentColor; }
+.prop-sub { margin: 18px 0 8px; font-size: 1rem; }
+.prop-parcelas { margin-bottom: 4px; }

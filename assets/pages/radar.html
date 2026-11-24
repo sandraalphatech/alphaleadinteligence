@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Radar · Alpha Leads Intelligence</title>
+    <link rel="icon" href="/assets/images/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/responsive.css">
+</head>
+<body data-page="radar" data-title="title_radar">
+    <div class="app">
+        <aside class="sidebar" id="sidebar"></aside>
+        <div class="main">
+            <header class="topbar">
+                <div><h1 data-i18n="nav_radar">Radar</h1><p data-i18n="radar_sub"></p></div>
+                <div class="topbar-right">
+                    <div class="lang" role="group" data-i18n-aria="aria_lang" aria-label="Language">
+                        <button type="button" data-lang="pt">PT</button>
+                    </div>
+                    <button class="burger" id="burger" data-i18n-aria="aria_menu" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+                </div>
+            </header>
+            <main class="content">
+                <div class="card recolha" id="recolha" hidden>
+                    <div class="recolha-info">
+                        <b data-i18n="collect_title">Find new opportunities</b>
+                        <span id="recolha-estado" aria-live="polite"></span>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="btn-recolher" data-i18n="collect_btn">Collect now</button>
+                </div>
+
+                <form class="card filtros" id="form-radar" novalidate>
+                    <label class="campo campo-busca">
+                        <span data-i18n="f_search">Search</span>
+                        <input type="search" id="f-q" maxlength="80" autocomplete="off">
+                    </label>
+                    <label class="campo"><span data-i18n="f_region">Region</span><select id="f-regiao"></select></label>
+                    <label class="campo"><span data-i18n="f_country">Country</span><select id="f-pais"></select></label>
+                    <label class="campo"><span data-i18n="f_language">Language</span><select id="f-idioma"></select></label>
+                    <label class="campo"><span data-i18n="f_sector">Sector</span><select id="f-sector"></select></label>
+                    <label class="campo"><span data-i18n="f_service">Service</span><select id="f-servico"></select></label>
+                    <div class="filtros-fim">
+                        <label class="check"><input type="checkbox" id="f-startup"><span data-i18n="f_only_startups">Startups only</span></label>
+                        <label class="check"><input type="checkbox" id="f-alvo" checked><span data-i18n="f_only_targets">Hide large companies and solo projects</span></label>
+                        <button type="button" class="btn-link" id="f-limpar" data-i18n="f_clear">Clear filters</button>
+                    </div>
+                </form>
+
+                <div class="card">
+                    <div class="card-head"><h2 id="radar-total" data-i18n="loading">Loading…</h2></div>
+                    <div class="card-body" id="radar-lista"></div>
+                    <div class="paginacao" id="radar-paginas" hidden>
+                        <button type="button" class="btn-link" id="p-ant" data-i18n="prev">Previous</button>
+                        <span id="p-info"></span>
+                        <button type="button" class="btn-link" id="p-seg" data-i18n="next">Next</button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="/assets/js/i18n.js"></script>
+    <script src="/assets/js/app.js"></script>
+    <script src="/assets/js/contact.js"></script>
+    <script src="/assets/js/radar.js"></script>
+</body>
+</html>
