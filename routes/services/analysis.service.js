@@ -13,6 +13,12 @@ const TAMANHO_LOTE = 8;
 
 const PAISES = Object.values(REGIOES).flat();
 const PILARES = ['inovacao', 'escalabilidade', 'incerteza', 'tecnologia'];
+const TIPOS_ENTIDADE = ['empresa', 'orgao_publico', 'associacao', 'sem_nome'];
+
+// Segunda barreira, caso a Claude se engane: nomes que nunca são de um potencial cliente
+const NOME_PUBLICO = /^(prefeitura|c[aâ]mara municipal|munic[ií]pio|junta de freguesia|governo|secretaria|minist[eé]rio|escola de samba|escola (municipal|estadual|p[uú]blica))(?![\p{L}])/iu;
+// "Startup de picape", "Empresa que vende..." são descrições, não nomes (a palavra seguinte vem em minúsculas)
+const NOME_GENERICO = /^(?:[Ss]tartup|[Ee]mpresa) (?:de|do|da|que) \p{Ll}/u;
 
 let cliente = null;
 function obterCliente() {
@@ -28,6 +34,12 @@ const SISTEMA = `És o analista do Radar de oportunidades da Alpha Tech Solution
 Vais receber uma lista de itens (notícias, posts, lançamentos). São alvo tanto startups como PME de qualquer sector (clínicas, imobiliárias, escolas, serviços, comércio); os pilares de startup servem apenas para as distinguir, e uma PME que não é startup continua a ser um bom lead se tiver presença digital fraca, site antigo ou processos manuais. Para CADA item:
 
 1. Identifica a empresa principal de que o item fala. Se o item não trata de uma empresa concreta (opinião, política, notícia geral, vários negócios sem foco), põe tem_empresa=false.
+   Só interessam empresas PRIVADAS que possam contratar os nossos serviços e cujo nome próprio apareça no título ou no resumo. Indica em tipo_entidade o que é:
+   - empresa: negócio privado identificado pelo nome.
+   - orgao_publico: prefeitura, câmara municipal, governo, secretaria, ministério, escola ou hospital públicos, universidade pública.
+   - associacao: escola de samba, clube, ONG, igreja, sindicato, federação, fundação sem fins lucrativos.
+   - sem_nome: o item não diz o nome da empresa ("uma startup", "clínica da cidade"). Nunca inventes um nome descritivo como "Startup de picape elétrica".
+   Se tipo_entidade não for "empresa", põe tem_empresa=false.
 2. Avalia a empresa nos 4 pilares de uma startup (cumpre true/false e um motivo curto):
    - inovacao: tem um produto, serviço ou modelo novo, ou apenas copia um negócio existente?
    - escalabilidade: pode crescer muito sem os custos subirem na mesma proporção (tipicamente software e plataformas)?
@@ -65,6 +77,7 @@ const FERRAMENTA = {
                     properties: {
                         indice: { type: 'integer' },
                         tem_empresa: { type: 'boolean' },
+                        tipo_entidade: { type: 'string', enum: TIPOS_ENTIDADE },
                         nome: { type: ['string', 'null'], description: 'Nome comercial da empresa' },
                         website: { type: ['string', 'null'] },
                         pais: { type: ['string', 'null'], description: 'Código ISO de 2 letras' },
@@ -93,7 +106,7 @@ const FERRAMENTA = {
                         },
                         justificacao: { type: ['string', 'null'] }
                     },
-                    required: ['indice', 'tem_empresa']
+                    required: ['indice', 'tem_empresa', 'tipo_entidade']
                 }
             }
         },
@@ -110,6 +123,8 @@ function validar(r) {
 
     const nome = texto(r.nome, 120);
     if (!nome || nome.length < 2) return { tem_empresa: false };
+    if (r.tipo_entidade && r.tipo_entidade !== 'empresa') return { tem_empresa: false };
+    if (NOME_PUBLICO.test(nome) || NOME_GENERICO.test(nome)) return { tem_empresa: false };
 
     const pais = PAISES.includes(String(r.pais || '').toUpperCase()) ? String(r.pais).toUpperCase() : null;
     const foraAmbito = !!r.pais && !pais && /^[A-Za-z]{2}$/.test(r.pais);   // país válido, mas fora da Europa/Américas
