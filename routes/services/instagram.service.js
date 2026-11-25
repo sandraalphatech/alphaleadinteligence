@@ -80,6 +80,8 @@ REGRAS COMUNS: sem listas nem marcadores entre [] ou {}, e SEM frase de remoçã
 
 Responde apenas com JSON: {"mensagem": "...", "base": {"facto": "...", "oportunidade": "...", "hipotese": "..." ou null}} ("base" em português de Portugal, uma frase cada, para o utilizador conferir; "facto" e "oportunidade" sempre preenchidos).`;
 
+const { aplicarFoco } = require('./focus.service');
+
 const semMarcas = (t) => String(t || '').replace(/<[^>]*>/g, '').replace(/https?:\/\/\S+/gi, '').replace(/\r/g, '');
 const PLACEHOLDER = /\[[^\]]{1,40}\]|\{[^}]{1,40}\}/;
 const limpa = (v) => (typeof v === 'string' ? v.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim().slice(0, 300) : '');
@@ -99,8 +101,8 @@ function validarRascunho(r) {
     return { mensagem: m, ...(b && (b.facto || b.oportunidade || b.hipotese) ? { base: b } : {}) };
 }
 
-async function gerarRascunho(empresaId, { destinatarioId, idioma }, utilizador) {
-    const ctx = await o.carregar(empresaId, 'instagram');
+async function gerarRascunho(empresaId, { destinatarioId, idioma, foco }, utilizador) {
+    const ctx = aplicarFoco(await o.carregar(empresaId, 'instagram'), foco);
     if (!ctx) throw erro('NAO_ENCONTRADA', 'Empresa não encontrada.');
     const destinatario = listarDestinatarios(ctx).lista.find((d) => d.id === destinatarioId);
     if (!destinatario) throw erro('DESTINATARIO', 'Destinatário inválido.');

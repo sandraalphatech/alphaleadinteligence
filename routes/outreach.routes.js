@@ -8,6 +8,8 @@ const whatsappReply = require('./services/whatsapp-reply.service');
 const emailReplies = require('./services/email-replies.service');
 
 const { traduzir, guardarIdioma } = require('./services/messages.service');
+const { opcoesDeFoco } = require('./services/focus.service');
+
 const router = express.Router();
 router.use(guardarIdioma);
 router.use(exigirLogin);
@@ -46,12 +48,21 @@ router.get('/empresas/:id/email', async (req, res) => {
     } catch (erro) { responderErro(res, erro); }
 });
 
+// GET /api/outreach/empresas/:id/foco   o que se pode propor primeiro (vem da análise guardada; não chama a IA)
+router.get('/empresas/:id/foco', exigirPapel('admin', 'comercial'), async (req, res) => {
+    try {
+        const ctx = await outreach.carregar(req.params.id);
+        if (!ctx) return res.status(404).json({ erro: 'Empresa não encontrada.' });
+        res.json(opcoesDeFoco(ctx));
+    } catch (erro) { responderErro(res, erro); }
+});
+
 // POST /api/outreach/empresas/:id/email/rascunho   corpo: { destinatario, idioma }
 // A IA escreve o rascunho a partir da análise do lead. Não envia nada nem regista nada.
 router.post('/empresas/:id/email/rascunho', exigirPapel('admin', 'comercial'), async (req, res) => {
     try {
-        const { destinatario, idioma } = req.body || {};
-        res.json(await outreach.gerarRascunho(req.params.id, { destinatarioId: destinatario, idioma }, req.utilizador));
+        const { destinatario, idioma, foco } = req.body || {};
+        res.json(await outreach.gerarRascunho(req.params.id, { destinatarioId: destinatario, idioma, foco }, req.utilizador));
     } catch (erro) { responderErro(res, erro); }
 });
 
@@ -91,8 +102,8 @@ router.get('/empresas/:id/linkedin', async (req, res) => {
 // POST /api/outreach/empresas/:id/linkedin/rascunho   corpo: { destinatario, idioma }
 router.post('/empresas/:id/linkedin/rascunho', exigirPapel('admin', 'comercial'), async (req, res) => {
     try {
-        const { destinatario, idioma } = req.body || {};
-        res.json(await linkedin.gerarRascunho(req.params.id, { destinatarioId: destinatario, idioma }, req.utilizador));
+        const { destinatario, idioma, foco } = req.body || {};
+        res.json(await linkedin.gerarRascunho(req.params.id, { destinatarioId: destinatario, idioma, foco }, req.utilizador));
     } catch (erro) { responderErro(res, erro); }
 });
 
@@ -121,8 +132,8 @@ router.get('/empresas/:id/instagram', async (req, res) => {
 // POST /api/outreach/empresas/:id/instagram/rascunho   corpo: { destinatario, idioma }
 router.post('/empresas/:id/instagram/rascunho', exigirPapel('admin', 'comercial'), async (req, res) => {
     try {
-        const { destinatario, idioma } = req.body || {};
-        res.json(await instagram.gerarRascunho(req.params.id, { destinatarioId: destinatario, idioma }, req.utilizador));
+        const { destinatario, idioma, foco } = req.body || {};
+        res.json(await instagram.gerarRascunho(req.params.id, { destinatarioId: destinatario, idioma, foco }, req.utilizador));
     } catch (erro) { responderErro(res, erro); }
 });
 
@@ -151,8 +162,8 @@ router.get('/empresas/:id/whatsapp', async (req, res) => {
 // POST /api/outreach/empresas/:id/whatsapp/rascunho   corpo: { destinatario, idioma, servico }
 router.post('/empresas/:id/whatsapp/rascunho', exigirPapel('admin', 'comercial'), async (req, res) => {
     try {
-        const { destinatario, idioma, servico } = req.body || {};
-        res.json(await whatsapp.gerarVariaveis(req.params.id, { destinatarioId: destinatario, idioma, servico }, req.utilizador));
+        const { destinatario, idioma, servico, foco } = req.body || {};
+        res.json(await whatsapp.gerarVariaveis(req.params.id, { destinatarioId: destinatario, idioma, servico, foco }, req.utilizador));
     } catch (erro) { responderErro(res, erro); }
 });
 

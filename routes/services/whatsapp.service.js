@@ -212,10 +212,12 @@ O modelo final será o texto que vem no pedido, com {{1}} = nome da empresa (já
 
 Responde apenas com JSON: {"facto": "...", "leitura": "...", "base": {"facto": "...", "oportunidade": "...", "hipotese": "..." ou null}} ("base" em português de Portugal, uma frase cada, para o utilizador conferir; "facto" e "oportunidade" sempre preenchidos).`;
 
+const { aplicarFoco } = require('./focus.service');
+
 const limpaBase = (v) => (typeof v === 'string' ? v.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim().slice(0, 300) : '');
 
-async function gerarVariaveis(empresaId, { destinatarioId, idioma, servico }, utilizador, { fetchFn = fetch } = {}) {
-    const ctx = await o.carregar(empresaId, 'whatsapp');
+async function gerarVariaveis(empresaId, { destinatarioId, idioma, servico, foco }, utilizador, { fetchFn = fetch } = {}) {
+    const ctx = aplicarFoco(await o.carregar(empresaId, 'whatsapp'), foco);
     if (!ctx) throw erro('NAO_ENCONTRADA', 'Empresa não encontrada.');
     const destinatario = listarDestinatarios(ctx).lista.find((d) => d.id === destinatarioId);
     if (!destinatario) throw erro('DESTINATARIO', 'Destinatário inválido.');

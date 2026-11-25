@@ -41,6 +41,8 @@ const obterCliente = () => {
     return (cliente ||= new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }));
 };
 
+const { aplicarFoco } = require('./focus.service');
+
 // ---------- carregar tudo o que é preciso sobre uma empresa ----------
 async function carregar(empresaId, canal = 'email') {           // as interações carregadas são as do canal pedido (cada canal tem o seu ciclo)
     if (!/^[0-9a-f-]{36}$/i.test(empresaId || '')) return null;
@@ -263,8 +265,14 @@ function montarPedido(ctx, destinatario, idioma, regras) {
         `Empresa: ${e.nome} (${e.tipo_empresa || 'startup'})${e.pais ? `, ${e.pais}` : ''}`,
         Number.isFinite(forca) ? `Força das evidências (0-100): ${forca}${forca < 40 ? ' (fraca: email curto, só um facto, pedido em forma de pergunta)' : forca >= 60 ? ' (boa: podes propor trazer uma ideia concreta)' : ''}` : null,
         '',
-        `Pergunta de negócio (sugestão a reescrever com as tuas palavras, adaptada a esta oportunidade): ${perguntaSugerida(sinais.filter((s) => !POR_CONFIRMAR.test(s.evidencia?.pt || '')), servico?.servico || ctx.lead?.servico_interesse)}`,
+        `Pergunta de negócio (sugestão a reescrever com as tuas palavras, adaptada a esta oportunidade): ${perguntaSugerida(ctx.foco?.servico ? [] : sinais.filter((s) => !POR_CONFIRMAR.test(s.evidencia?.pt || '')), servico?.servico || ctx.lead?.servico_interesse)}`,
         '',
+        ...(ctx.foco ? [
+            '== ESCOLHA DE QUEM ENVIA (tem prioridade sobre o resto do dossier) ==',
+            ctx.foco.servico ? `Propõe primeiro e SÓ este serviço: ${NOMES_SERVICOS[ctx.foco.servico]}. Não cites outros serviços.` : null,
+            ctx.foco.sinal ? `Começa o contacto por este ponto: ${ctx.foco.sinal.evidencia?.pt}${POR_CONFIRMAR.test(ctx.foco.sinal.evidencia?.pt || '') ? ' (por confirmar: só em forma de pergunta)' : ''}` : null,
+            ''
+        ] : []),
         '== FACTOS OBSERVADOS (podes afirmá-los; afirma só o que foi observado, sem as conclusões que o texto da análise tire deles) ==',
         ...(factos.length ? factos : ['(nenhum facto concreto: escreve um email curto e honesto, sem afirmar nada sobre a empresa além do nome e da área)']),
         '',
@@ -300,8 +308,8 @@ function validarRascunho(r) {
     return { assunto, corpo, ...(b && (b.facto || b.oportunidade || b.hipotese) ? { base: b } : {}) };
 }
 
-async function gerarRascunho(empresaId, { destinatarioId, idioma }, utilizador) {
-    const ctx = await carregar(empresaId);
+async function gerarRascunho(empresaId, { destinatarioId, idioma, foco }, utilizador) {
+    const ctx = aplicarFoco(await carregar(empresaId), foco);
     if (!ctx) { const e = new Error('Empresa não encontrada.'); e.codigo = 'NAO_ENCONTRADA'; throw e; }
     const { lista } = listarDestinatarios(ctx);
     const destinatario = lista.find((d) => d.id === destinatarioId && d.utilizavel);

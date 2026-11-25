@@ -130,6 +130,8 @@ REGRAS COMUNS: sem links, emojis, listas, marcadores entre [] ou {}, nem frase d
 
 Responde apenas com JSON: {"convite": "..." ou null se não for pedido, "mensagem": "..." ou null se não for pedida, "base": {"facto": "...", "oportunidade": "...", "hipotese": "..." ou null}} ("base" em português de Portugal, uma frase cada, para o utilizador conferir; "facto" e "oportunidade" sempre preenchidos).`;
 
+const { aplicarFoco } = require('./focus.service');
+
 const semMarcas = (t) => String(t || '').replace(/<[^>]*>/g, '').replace(/https?:\/\/\S+/gi, '').replace(/\r/g, '');
 const PLACEHOLDER = /\[[^\]]{1,40}\]|\{[^}]{1,40}\}/;
 
@@ -163,8 +165,8 @@ function validarRascunho(r, { convite, mensagem }) {
     return { convite: c, mensagem: m, ...(b && (b.facto || b.oportunidade || b.hipotese) ? { base: b } : {}) };
 }
 
-async function gerarRascunho(empresaId, { destinatarioId, idioma }, utilizador) {
-    const ctx = await o.carregar(empresaId, 'linkedin');
+async function gerarRascunho(empresaId, { destinatarioId, idioma, foco }, utilizador) {
+    const ctx = aplicarFoco(await o.carregar(empresaId, 'linkedin'), foco);
     if (!ctx) throw erro('NAO_ENCONTRADA', 'Empresa não encontrada.');
     const destinatario = listarDestinatarios(ctx).lista.find((d) => d.id === destinatarioId);
     if (!destinatario) throw erro('DESTINATARIO', 'Destinatário inválido.');

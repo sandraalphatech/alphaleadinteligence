@@ -225,13 +225,73 @@ const Contact = (() => {
             const b = ev.target.closest('[data-canal]');
             if (!b || b.disabled) return;
             fecharMenu();
-            if (b.dataset.canal === 'email') abrirEmail(empresa, aoRegistar);
-            else if (b.dataset.canal === 'linkedin') abrirLinkedin(empresa, aoRegistar);
-            else if (b.dataset.canal === 'instagram') abrirInstagram(empresa, aoRegistar);
-            else if (b.dataset.canal === 'whatsapp') abrirWhatsapp(empresa, aoRegistar);
+            const abrir = { email: abrirEmail, linkedin: abrirLinkedin, instagram: abrirInstagram, whatsapp: abrirWhatsapp }[b.dataset.canal];
+            if (abrir) escolherFoco(empresa, (foco) => abrir({ ...empresa, foco }, aoRegistar));
         });
         setTimeout(() => { document.addEventListener('click', foraDoMenu, true); document.addEventListener('keydown', teclaMenu); }, 0);
         menu.querySelector('button:not([disabled])')?.focus();
+    }
+
+    // ---------- antes de escrever: o que propor primeiro e por onde começar ----------
+    // Se as opções não puderem ser lidas, o canal abre como antes (a IA decide).
+    async function escolherFoco(empresa, continuar) {
+        const fundo = document.createElement('div');
+        fundo.className = 'contact-fundo';
+        const titulo = esc(t('focus_title').replace('{empresa}', empresa.nome));
+        fundo.innerHTML = `<div class="contact-modal" role="dialog" aria-modal="true" aria-label="${titulo}" tabindex="-1">
+            <div class="contact-cab"><h3>${titulo}</h3>
+                <button type="button" class="contact-x" data-fechar aria-label="${esc(t('contact_close'))}">×</button></div>
+            <div class="contact-corpo"><p class="nota">${esc(t('contact_loading'))}</p></div></div>`;
+        document.body.appendChild(fundo);
+        document.body.classList.add('modal-aberto');
+        const corpo = fundo.querySelector('.contact-corpo');
+        fundo.querySelector('.contact-modal').focus();
+
+        let aberto = true;
+        const fechar = () => { aberto = false; fundo.remove(); document.body.classList.remove('modal-aberto'); document.removeEventListener('keydown', tecla); };
+        const tecla = (ev) => { if (ev.key === 'Escape') fechar(); };
+        document.addEventListener('keydown', tecla);
+        fundo.addEventListener('click', (ev) => { if (ev.target === fundo || ev.target.closest('[data-fechar]')) fechar(); });
+
+        let r;
+        try { r = await api(`/api/outreach/empresas/${encodeURIComponent(empresa.id)}/foco`); }
+        catch { if (aberto) { fechar(); continuar(null); } return; }
+        if (!aberto) return;
+
+        const traduzido = (prefixo, valor) => { const s = t(prefixo + valor); return s === prefixo + valor ? valor : s; };
+        const opcao = (nome, valor, marcada, conteudo) =>
+            `<label class="foco-opcao"><input type="radio" name="${nome}" value="${esc(valor)}" ${marcada ? 'checked' : ''}><span>${conteudo}</span></label>`;
+        const servicos = r.opcoes.map((o, i) => opcao('servico', o.servico, i === 0,
+            `<b>${esc(NS.servico(o.servico))}</b> <span class="badge ${i === 0 ? 'quente' : 'morno'}">${esc(t(i === 0 ? 'focus_strongest' : 'focus_alternative'))}</span>`
+            + (o.motivo ? `<span class="foco-texto">${esc(o.motivo)}</span>` : '')
+            + o.dores.map((d) => `<span class="foco-texto"><em>${esc(t('focus_pain'))}:</em> ${esc(d.necessidade)}${d.evidencia ? ` <span class="nota">(${esc(d.evidencia)})</span>` : ''}</span>`).join('')
+        )).join('');
+        const outros = r.outros.map((s) => opcao('servico', s, false, `<b>${esc(NS.servico(s))}</b>`)).join('');
+        const sinais = r.sinais.map((s) => opcao('sinal', s.indice, false,
+            `<b>${esc(traduzido('sinal_', s.tipo))}</b> <span class="badge ${{ alta: 'quente', media: 'morno' }[s.forca] || 'frio'}">${esc(traduzido('forca_', s.forca))}</span>`
+            + `<span class="foco-texto">${esc(s.evidencia)}</span>`)).join('');
+        const gerais = r.necessidades_gerais.map((n) => `<li>${esc(n)}</li>`).join('');
+
+        corpo.innerHTML = `<form>
+            ${r.analisada ? '' : `<p class="nota">${esc(t('focus_no_analysis'))}</p>`}
+            ${r.abordagem ? `<p class="nota"><b>${esc(t('focus_angle'))}:</b> ${esc(r.abordagem)}</p>` : ''}
+            ${gerais ? `<p class="nota"><b>${esc(t('focus_general'))}:</b></p><ul class="nota foco-gerais">${gerais}</ul>` : ''}
+            <fieldset class="foco-grupo"><legend>${esc(t('focus_service'))}</legend>
+                ${servicos}
+                ${r.opcoes.length ? `<details><summary class="link">${esc(t('focus_others'))}</summary>${outros}</details>` : opcao('servico', '', true, esc(t('focus_auto'))) + outros}
+            </fieldset>
+            ${sinais ? `<fieldset class="foco-grupo"><legend>${esc(t('focus_opening'))}</legend>${opcao('sinal', '', true, esc(t('focus_auto')))}${sinais}</fieldset>` : ''}
+            <div class="contact-acoes"><button type="submit" class="btn btn-primary">${esc(t('focus_generate'))}</button></div>
+        </form>`;
+
+        corpo.querySelector('form').addEventListener('submit', (ev) => {
+            ev.preventDefault();
+            const dados = new FormData(ev.target);
+            const servico = dados.get('servico') || null, sinal = dados.get('sinal');
+            const foco = { servico, sinal: sinal ? Number(sinal) : null };
+            fechar();
+            continuar(foco.servico || foco.sinal !== null ? foco : null);
+        });
     }
 
     // ---------- janela do email ----------
@@ -336,7 +396,7 @@ const Contact = (() => {
             aviso('');
             try {
                 const r = await api(`/api/outreach/empresas/${encodeURIComponent(empresa.id)}/email/rascunho`,
-                    { method: 'POST', body: JSON.stringify({ destinatario: $('ct-dest').value, idioma: $('ct-idioma').value }) });
+                    { method: 'POST', body: JSON.stringify({ destinatario: $('ct-dest').value, idioma: $('ct-idioma').value, foco: empresa.foco }) });
                 $('ct-assunto').value = r.assunto;
                 $('ct-corpo').innerHTML = r.html || textoParaHtml(r.corpo);
                 ia = { gerado: true, modelo: r.modelo };
@@ -561,7 +621,7 @@ const Contact = (() => {
             $('ct-nota').textContent = t('contact_writing'); aviso('');
             try {
                 const r = await api(`/api/outreach/empresas/${encodeURIComponent(empresa.id)}/linkedin/rascunho`,
-                    { method: 'POST', body: JSON.stringify({ destinatario: $('li-dest').value, idioma: $('li-idioma').value }) });
+                    { method: 'POST', body: JSON.stringify({ destinatario: $('li-dest').value, idioma: $('li-idioma').value, foco: empresa.foco }) });
                 if ($('li-convite')) $('li-convite').value = r.convite || '';
                 if ($('li-mensagem')) $('li-mensagem').value = r.mensagem || '';
                 ia = { gerado: true, modelo: r.modelo }; editado = false;
@@ -685,7 +745,7 @@ const Contact = (() => {
             $('ct-nota').textContent = t('contact_writing'); aviso(''); $('ig-aviso-passo').innerHTML = '';
             try {
                 const r = await api(`/api/outreach/empresas/${encodeURIComponent(empresa.id)}/instagram/rascunho`,
-                    { method: 'POST', body: JSON.stringify({ destinatario: conta.id, idioma: $('ig-idioma').value }) });
+                    { method: 'POST', body: JSON.stringify({ destinatario: conta.id, idioma: $('ig-idioma').value, foco: empresa.foco }) });
                 $('ig-mensagem').value = r.mensagem;
                 ia = { gerado: true, modelo: r.modelo }; editado = false;
                 $('ct-nota').textContent = t('contact_ai_note').replace('{m}', r.modelo.replace('claude-', ''));
@@ -801,7 +861,7 @@ const Contact = (() => {
         const lista = () => estado.modelos[chaveIdioma()] || [];
         const nomeDoModelo = (servico) => (servico === 'generico' ? t('ws_template_generic') : NS.servico(servico));
         // o modelo pré-selecionado: o do serviço recomendado pela análise; senão o genérico; senão o primeiro
-        const padrao = () => { const l = lista(); return (l.find((m) => m.servico === estado.servico_recomendado) || l.find((m) => m.servico === 'generico') || l[0] || {}).servico; };
+        const padrao = () => { const l = lista(); return (l.find((m) => m.servico === empresa.foco?.servico) || l.find((m) => m.servico === estado.servico_recomendado) || l.find((m) => m.servico === 'generico') || l[0] || {}).servico; };
         function preencherModelos(manter) {
             const l = lista(), antes = manter ? $('ws-modelo').value : null;
             $('ws-modelo').innerHTML = l.map((m) => `<option value="${esc(m.servico)}">${esc(nomeDoModelo(m.servico))}${m.servico === estado.servico_recomendado ? ` · ${esc(t('ws_template_rec'))}` : ''}</option>`).join('');
@@ -834,7 +894,7 @@ const Contact = (() => {
             $('ct-nota').textContent = t('contact_writing'); aviso(''); $('ws-aviso-passo').innerHTML = '';
             try {
                 const r = await api(`/api/outreach/empresas/${encodeURIComponent(empresa.id)}/whatsapp/rascunho`,
-                    { method: 'POST', body: JSON.stringify({ destinatario: numero.id, idioma: $('ws-idioma').value, servico: $('ws-modelo').value }) });
+                    { method: 'POST', body: JSON.stringify({ destinatario: numero.id, idioma: $('ws-idioma').value, servico: $('ws-modelo').value, foco: empresa.foco }) });
                 CAMPOS.forEach(([n]) => { $('ws-v' + n).value = r.variaveis[n] || ''; });
                 ia = { gerado: true, modelo: r.modeloIA }; editado = false;
                 $('ct-nota').textContent = t('contact_ai_note').replace('{m}', String(r.modeloIA).replace('claude-', ''));
