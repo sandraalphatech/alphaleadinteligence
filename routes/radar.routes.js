@@ -6,6 +6,7 @@ const { CONECTORES } = require('./services/connectors');
 const { calcularPrioridade } = require('./services/priority.service');
 const { iniciarRecolha, LIMITE_POR_DEFEITO, LIMITE_MAXIMO } = require('./services/radar.pipeline');
 const { conectoresAtivos } = require('./services/sources.service');
+const contactos = require('./services/contacts.service');
 
 const router = express.Router();
 
@@ -126,6 +127,23 @@ router.get('/empresas/:id', async (req, res) => {
 
     res.json({ ...empresa, decisores, lead, historico: historico || [] });
 });
+
+// Contatos acrescentados à mão na ficha (só admin e comercial)
+const ESTADO_ERRO = { INVALIDO: 400, NAO_ENCONTRADA: 404, DUPLICADO: 409 };
+const gravarContacto = (acao) => async (req, res) => {
+    if (!/^[0-9a-f-]{36}$/i.test(req.params.id)) return res.status(400).json({ erro: 'Identificador inválido.' });
+    try {
+        res.json(await acao(req.params.id, req.body || {}));
+    } catch (erro) {
+        if (ESTADO_ERRO[erro.codigo]) return res.status(ESTADO_ERRO[erro.codigo]).json({ erro: erro.message, codigo: erro.codigo });
+        console.error('Erro ao salvar o contato:', erro.message);
+        res.status(500).json({ erro: 'Não foi possível salvar o contato.' });
+    }
+};
+// PUT /api/radar/empresas/:id/contactos   corpo: { email, telefone, whatsapp, instagram, linkedin }
+router.put('/empresas/:id/contactos', exigirPapel('admin', 'comercial'), gravarContacto(contactos.guardarContactos));
+// POST /api/radar/empresas/:id/pessoas    corpo: { nome, cargo, email, linkedin }
+router.post('/empresas/:id/pessoas', exigirPapel('admin', 'comercial'), gravarContacto(contactos.adicionarPessoa));
 
 // POST /api/radar/recolher  corpo (opcional): { "limite": 40, "conectores": ["hacker_news"] }
 // Inicia uma recolha em segundo plano e responde logo com o id (o browser vai vendo o progresso).

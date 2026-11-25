@@ -313,6 +313,12 @@ async function gravarEnriquecimento(empresa, r) {
         for (const campo of ['telefone', 'email_geral']) if (alterar[campo] === null) delete alterar[campo];
     }
 
+    // Contatos que já existem (escritos à mão ou importados) têm prioridade: o site só preenche o que está vazio.
+    const { data: atual } = await supabaseAdmin.from('empresas').select('telefone, email_geral, redes').eq('id', empresa.id).maybeSingle();
+    if (atual?.telefone) delete alterar.telefone;
+    if (atual?.email_geral) { delete alterar.email_geral; delete alterar.email_geral_estado; }
+    if (alterar.redes) alterar.redes = { ...alterar.redes, ...(atual?.redes || {}) };
+
     const { id: empresaId } = await actualizarEmpresa(empresa.id, alterar, 'enriquecimento');
 
     let novos = 0;

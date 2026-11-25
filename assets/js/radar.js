@@ -138,7 +138,7 @@
         const f = fichas.get(id);
         if (!f) return `<p class="nota">${esc(t('loading'))}</p>`;
         if (f.erro) return `<div class="erro-ui">${esc(t('detail_error'))}</div>`;
-        if (!f.enriquecida_em) return `<p class="nota">${esc(t('detail_pending'))}</p>`;
+        const pendente = f.enriquecida_em ? '' : `<p class="nota">${esc(t('detail_pending'))}</p>`;
 
         const campo = (rotulo, valor) => (valor ? `<div class="ficha-linha"><b>${esc(t(rotulo))}</b><span>${valor}</span></div>` : '');
         const redes = Object.entries(f.redes || {}).filter(([r]) => REDES[r]).map(([r, u]) => ligacao(u, REDES[r])).filter(Boolean).join(' · ');
@@ -150,19 +150,69 @@
             ? `<ul class="decisores">${f.decisores.map((d) => `
                 <li>
                     <div><b>${esc(d.nome)}</b> <span class="nota">${esc(d.cargo || '')}</span> <span class="badge novo">${esc(t('cat_' + d.categoria))}</span>${d.nao_contactar ? ` <span class="badge frio">${esc(t('detail_dnc'))}</span>` : ''}</div>
-                    <div class="nota">${[ligacao(d.linkedin_url, 'LinkedIn'), d.email ? esc(d.email) : '', ligacao(d.fonte_url, t('detail_source')) + ' · ' + esc(new Date(d.recolhido_em).toLocaleDateString(I18N.locale()))].filter(Boolean).join(' · ')}</div>
+                    <div class="nota">${[ligacao(d.linkedin_url, 'LinkedIn'), d.email ? esc(d.email) : '', d.fonte_url === 'manual' ? esc(t('detail_manual')) : ligacao(d.fonte_url, t('detail_source')), esc(new Date(d.recolhido_em).toLocaleDateString(I18N.locale()))].filter(Boolean).join(' · ')}</div>
                 </li>`).join('')}</ul>`
             : `<p class="nota">${esc(t('detail_no_people'))}</p>`;
 
-        return `${htmlAnalise(f)}
+        return `${pendente}${htmlAnalise(f)}
                 ${campo('detail_type', f.tipo_empresa ? `${esc(t('tipo_' + f.tipo_empresa))}${f.tipo_motivo ? ` <span class="nota">· ${esc(texto(f, 'tipo_motivo'))}</span>` : ''}` : '')}
                 ${campo('detail_about', f.sobre ? esc(texto(f, 'sobre')) : '')}
                 ${campo('detail_address', f.morada ? esc(f.morada) : '')}
                 ${campo('detail_contacts', contactos)}
                 ${campo('detail_socials', redes)}
                 <div class="ficha-linha"><b>${esc(t('detail_people'))}</b></div>${pessoas}
+                ${podeContactar ? htmlEditarContactos(f) : ''}
                 ${htmlHistorico(f.historico || [])}`;
     }
+
+    // ---------- acrescentar contatos à mão ----------
+    function htmlEditarContactos(f) {
+        const entrada = (nome, rotulo, valor = '', extra = '') =>
+            `<label class="contacto-campo"><span>${esc(t(rotulo))}</span><input name="${nome}" value="${esc(valor)}" maxlength="200" autocomplete="off" ${extra}></label>`;
+        const formulario = (tipo, titulo, campos) => `
+            <details class="contacto-novo">
+                <summary class="link">${esc(t(titulo))}</summary>
+                <form data-form="${tipo}" data-empresa="${esc(f.id)}" novalidate>
+                    <div class="contacto-grelha">${campos}</div>
+                    <p class="erro-ui" role="alert" hidden></p>
+                    <button type="submit" class="btn btn-primary">${esc(t('ct_save'))}</button>
+                </form>
+            </details>`;
+        return formulario('contactos', 'ct_edit_company',
+                entrada('email', 'ct_email', f.email_geral || '', 'type="email"') +
+                entrada('telefone', 'ct_phone', f.telefone || '', 'type="tel" placeholder="+55 11 91234-5678"') +
+                entrada('whatsapp', 'ct_whatsapp', f.redes?.whatsapp || '', 'type="tel" placeholder="+351 912 345 678"') +
+                entrada('instagram', 'ct_instagram', f.redes?.instagram || '', 'placeholder="@empresa"') +
+                entrada('linkedin', 'ct_linkedin', f.redes?.linkedin || '', 'placeholder="linkedin.com/company/…"'))
+            + formulario('pessoas', 'ct_add_person',
+                entrada('nome', 'ct_name') + entrada('cargo', 'ct_role') + entrada('email', 'ct_email', '', 'type="email"') +
+                entrada('linkedin', 'ct_linkedin', '', 'placeholder="linkedin.com/in/…"'));
+    }
+
+    $('radar-lista').addEventListener('submit', async (ev) => {
+        const form = ev.target.closest('form[data-form]');
+        if (!form) return;
+        ev.preventDefault();
+        const { form: tipo, empresa: id } = form.dataset;
+        const botao = form.querySelector('button[type="submit"]');
+        const aviso = form.querySelector('[role="alert"]');
+        botao.disabled = true;
+        aviso.hidden = true;
+        try {
+            await api(`/api/radar/empresas/${encodeURIComponent(id)}/${tipo}`, {
+                method: tipo === 'contactos' ? 'PUT' : 'POST',
+                body: JSON.stringify(Object.fromEntries(new FormData(form)))
+            });
+        } catch (erro) {
+            aviso.textContent = erro.message;
+            aviso.hidden = false;
+            botao.disabled = false;
+            return;
+        }
+        try { fichas.set(id, await api('/api/radar/empresas/' + encodeURIComponent(id))); }
+        catch { fichas.set(id, { erro: true }); }
+        desenharResultados();
+    });
 
     // ---------- análise da oportunidade (Etapa 6) ----------
     // Os textos da análise vêm como { pt, en, es }: mostramos o do idioma escolhido, ou o português.
