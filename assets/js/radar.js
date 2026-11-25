@@ -122,7 +122,7 @@
                     ${origem ? `<span class="origem">${origem}</span>` : ''}
                     <button type="button" class="btn-link" data-detalhe="${esc(e.id)}" aria-expanded="${aberta}">${esc(t(aberta ? 'detail_hide' : 'detail_show'))}</button>
                 </div>
-                <div class="item-badges">${etiquetaStartup(e)}${etiquetaPontos(e.melhor_pontuacao)}${podeContactar ? `<button type="button" class="btn-contactar" data-contactar="${esc(e.id)}" aria-haspopup="menu">${esc(t('contact_btn'))} <span aria-hidden="true">▾</span></button>` : ''}</div>
+                <div class="item-badges">${etiquetaStartup(e)}${etiquetaPontos(e.melhor_pontuacao)}${e.estado_tratado ? `<span class="badge frio">${esc(NS.estado(e.estado_tratado))}</span>` : ''}${podeContactar ? `<button type="button" class="btn-contactar" data-contactar="${esc(e.id)}" aria-haspopup="menu">${esc(t('contact_btn'))} <span aria-hidden="true">▾</span></button>` : ''}${podeContactar && !e.estado_tratado ? `<button type="button" class="btn-link" data-retirar="${esc(e.id)}">${esc(t('radar_remove'))}</button>` : ''}</div>
                 ${aberta ? `<div class="detalhe">${htmlFicha(e.id)}</div>` : ''}
             </li>`;
     }
@@ -329,6 +329,7 @@
         for (const [nome, id] of Object.entries(CAMPOS)) if ($(id).value) params.set(nome, $(id).value);
         if ($('f-startup').checked) params.set('startup', '1');
         if ($('f-alvo').checked) params.set('alvo', '1');
+        if ($('f-contactadas').checked) params.set('contactadas', '1');
 
         try {
             const r = await api('/api/radar/empresas?' + params);
@@ -365,12 +366,27 @@
         }
     });
 
+    // Retirar do Radar (a empresa não precisa dos nossos serviços, por exemplo)
+    $('radar-lista').addEventListener('click', async (ev) => {
+        const b = ev.target.closest('[data-retirar]');
+        if (!b) return;
+        const empresa = resultado?.empresas.find((x) => x.id === b.dataset.retirar);
+        if (!empresa || !confirm(t('radar_remove_confirm').replace('{empresa}', empresa.nome))) return;
+        b.disabled = true;
+        try { await api(`/api/radar/empresas/${encodeURIComponent(empresa.id)}/retirar`, { method: 'POST' }); }
+        catch (erro) { b.disabled = false; alert(erro.message); return; }
+        abertos.delete(empresa.id); fichas.delete(empresa.id);
+        // se era a única da página, volta à anterior
+        if (resultado.empresas.length === 1 && pagina > 1) pagina -= 1;
+        pesquisar();
+    });
+
     // Qualquer mudança de filtro volta à página 1
     const novaPesquisa = () => { pagina = 1; pesquisar(); };
 
     let atraso;
     $('f-q').addEventListener('input', () => { clearTimeout(atraso); atraso = setTimeout(novaPesquisa, 350); });
-    ['f-idioma', 'f-sector', 'f-servico', 'f-pais', 'f-startup', 'f-alvo'].forEach((id) => $(id).addEventListener('change', novaPesquisa));
+    ['f-idioma', 'f-sector', 'f-servico', 'f-pais', 'f-startup', 'f-alvo', 'f-contactadas'].forEach((id) => $(id).addEventListener('change', novaPesquisa));
     $('f-regiao').addEventListener('change', () => { desenharFiltros(); novaPesquisa(); });
     $('form-radar').addEventListener('submit', (e) => { e.preventDefault(); novaPesquisa(); });
 
@@ -378,6 +394,7 @@
         $('f-q').value = '';
         Object.values(CAMPOS).forEach((id) => { $(id).value = ''; });
         $('f-startup').checked = false;
+        $('f-contactadas').checked = false;
         $('f-alvo').checked = true;                 // "só alvos" é o estado normal
         desenharFiltros();
         novaPesquisa();

@@ -7,6 +7,12 @@ const { calcularPrioridade } = require('./services/priority.service');
 const { iniciarRecolha, LIMITE_POR_DEFEITO, LIMITE_MAXIMO } = require('./services/radar.pipeline');
 const { conectoresAtivos } = require('./services/sources.service');
 const contactos = require('./services/contacts.service');
+const pipeline = require('./services/pipeline.service');
+
+// O Radar é a lista do que ainda está por tratar. Um lead fora destes dois estados (já contactado, perdido, etc.)
+// passa a ser acompanhado em Leads e a empresa sai do Radar.
+const POR_TRATAR = ['novo', 'analisado'];
+const TRATADOS = pipeline.ESTADOS.filter((e) => !POR_TRATAR.includes(e));
 
 const router = express.Router();
 
@@ -29,7 +35,8 @@ router.get('/filtros', (req, res) => {
 // GET /api/radar/empresas?q=&regiao=&pais=&idioma=&sector=&servico=&startup=1&pagina=1
 // Pesquisa nas empresas já recolhidas. Todos os parâmetros são opcionais.
 router.get('/empresas', async (req, res) => {
-    const { q, regiao, pais, idioma, sector, servico, startup, alvo } = req.query;
+    const { q, regiao, pais, idioma, sector, servico, startup, alvo, contactadas } = req.query;
+    const soPorTratar = contactadas !== '1';
     const pagina = Math.max(1, parseInt(req.query.pagina, 10) || 1);
 
     // Só aceitamos valores que existem no catálogo (evita pedidos estranhos à base de dados)
@@ -45,9 +52,11 @@ router.get('/empresas', async (req, res) => {
     let consulta = supabaseAdmin
         .from('empresas')
         .select(`id, nome, tipo_empresa, traducoes, website, dominio, website_estado, cidade, pais, regiao, idioma, sector, descricao, e_startup, pilares_cumpridos,
-                 origem_titulo, origem_url, criado_em, ${ligacao}(id, estado, servico_interesse, pontuacao)`,
+                 origem_titulo, origem_url, criado_em, ${ligacao}(id, estado, servico_interesse, pontuacao)${soPorTratar ? ', tratados:leads(id)' : ''}`,
                 { count: 'exact' });
 
+    // exclui as empresas com algum lead já tratado e as marcadas como «não contactar»
+    if (soPorTratar) consulta = consulta.eq('nao_contactar', false).in('tratados.estado', TRATADOS).is('tratados', null);
     if (regiaoOk) consulta = consulta.eq('regiao', regiaoOk);
     if (paisOk) consulta = consulta.eq('pais', paisOk);
     if (idiomaOk) consulta = consulta.eq('idioma', idiomaOk);
@@ -72,12 +81,13 @@ router.get('/empresas', async (req, res) => {
     if (error) return res.status(500).json({ erro: 'Não foi possível pesquisar as empresas.' });
 
     // Cada empresa mostra a melhor pontuação entre os seus leads
-    const empresas = data.map(({ leads, ...empresa }) => {
+    const empresas = data.map(({ leads, tratados, ...empresa }) => {
         const pontos = leads.map((l) => l.pontuacao).filter((p) => p != null);
         return {
             ...empresa,
             melhor_pontuacao: pontos.length ? Math.max(...pontos) : null,
-            leads: leads.length
+            leads: leads.length,
+            estado_tratado: leads.find((l) => TRATADOS.includes(l.estado))?.estado || null
         };
     });
 
@@ -144,6 +154,29 @@ const gravarContacto = (acao) => async (req, res) => {
 router.put('/empresas/:id/contactos', exigirPapel('admin', 'comercial'), gravarContacto(contactos.guardarContactos));
 // POST /api/radar/empresas/:id/pessoas    corpo: { nome, cargo, email, linkedin }
 router.post('/empresas/:id/pessoas', exigirPapel('admin', 'comercial'), gravarContacto(contactos.adicionarPessoa));
+
+// POST /api/radar/empresas/:id/retirar   tira a empresa do Radar: o lead passa a «oportunidade perdida».
+// Não apaga nada e não bloqueia o contato; em Leads é possível voltar a pôr o lead em «analisado».
+router.post('/empresas/:id/retirar', exigirPapel('admin', 'comercial'), async (req, res) => {
+    if (!/^[0-9a-f-]{36}$/i.test(req.params.id)) return res.status(400).json({ erro: 'Identificador inválido.' });
+    try {
+        const { data: empresa } = await supabaseAdmin.from('empresas').select('id').eq('id', req.params.id).maybeSingle();
+        if (!empresa) return res.status(404).json({ erro: 'Empresa não encontrada.' });
+        const { data: leads, error } = await supabaseAdmin.from('leads').select('id, estado').eq('empresa_id', empresa.id);
+        if (error) throw new Error(error.message);
+        if (!leads.length) {
+            const { error: erroNovo } = await supabaseAdmin.from('leads').insert({ empresa_id: empresa.id, estado: 'oportunidade_perdida' });
+            if (erroNovo) throw new Error(erroNovo.message);
+        }
+        for (const lead of leads.filter((l) => POR_TRATAR.includes(l.estado))) {
+            await pipeline.mudarLead(lead.id, { estado: 'oportunidade_perdida' }, req.utilizador);
+        }
+        res.json({ ok: true });
+    } catch (erro) {
+        console.error('Erro ao retirar do Radar:', erro.message);
+        res.status(500).json({ erro: 'Não foi possível retirar a empresa do Radar.' });
+    }
+});
 
 // POST /api/radar/recolher  corpo (opcional): { "limite": 40, "conectores": ["hacker_news"] }
 // Inicia uma recolha em segundo plano e responde logo com o id (o browser vai vendo o progresso).
