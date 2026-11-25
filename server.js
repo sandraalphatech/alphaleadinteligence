@@ -9,7 +9,9 @@ const rateLimit = require('express-rate-limit');
 const app = express();
 
 app.disable('x-powered-by');
-if (process.env.TRUST_PROXY) app.set('trust proxy', process.env.TRUST_PROXY === 'true' ? 1 : process.env.TRUST_PROXY);   // atrás de um proxy (ex.: Nginx), para o limite por IP ver o IP real
+// No Render (que define a variável RENDER) há sempre um proxy à frente: liga-se sozinho.
+const PROXY = process.env.TRUST_PROXY || (process.env.RENDER ? 'true' : '');
+if (PROXY) app.set('trust proxy', PROXY === 'true' ? 1 : PROXY);   // atrás de um proxy, para o limite por IP ver o IP real
 
 // Cabeçalhos de segurança. A CSP só deixa correr scripts do próprio servidor (limita o estrago de um XSS).
 app.use(helmet({
